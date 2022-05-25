@@ -3,7 +3,7 @@ configfile: "config/samples.yaml"
 
 import glob
 def getLRFullPath(base, filename):
-  return glob.glob(''.join([base, "/*/outs/", filename]))
+  return glob.glob(''.join([base, filename]))
 
 
 rule svabaAll:
