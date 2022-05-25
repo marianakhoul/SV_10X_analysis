@@ -14,10 +14,10 @@ configfile: "config/samples.yaml"
 import glob
 import re
 def getLRFullPath(base, filename):
-  return glob.glob(''.join([base, "/*/outs/", filename]))
+  return glob.glob(''.join([base, filename]))
   
 def getTITANpath(base, id, ext):
-  return glob.glob(''.join([base, "results/titan/optimalClusterSolution/", id, "_cluster*", ext]))
+  return glob.glob(''.join([base, "titan/optimalClusterSolution/", id, "_cluster*", ext]))
 
 def getGROCpath(base, id):
   m = re.search('[0-9]+', id)
