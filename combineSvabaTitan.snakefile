@@ -88,9 +88,9 @@ rule combineSvabaTitan:
 		LRsvFile="results/LongRangerSomaticSV/{tumor}/{tumor}.LR.somatic.sv.txt",
 		#grocFile=lambda wildcards: getGROCpath(config["grocsvs_results"], wildcards.tumor),
 	output:
-		outputSVFile="results/combineSvabaGrocsvsTitan/{tumor}/{tumor}.svabaTitan.sv.txt",
-		outputBedpeFile="results/combineSvabaGrocsvsTitan/{tumor}/{tumor}.svabaTitan.sv.bedpe",
-		outputCNFile="results/combineSvabaGrocsvsTitan/{tumor}/{tumor}.svabaTitan.cn.txt"
+		outputSVFile="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.txt",
+		outputBedpeFile="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.bedpe",
+		outputCNFile="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.cn.txt"
 	params:
 		combineSVCNscript=config["combineSVCN_script"],
 		normID=lambda wildcards: config["pairings"][wildcards.tumor],
@@ -105,6 +105,6 @@ rule combineSvabaTitan:
 		windowSize=config["bxRescue_windowSize"],
 		minRead=config["bxRescue_minReadOverlapSupport"]	
 	log:
-		"logs/combineSvabaGrocsvsTitan/{tumor}.log"
+		"logs/combineSvabaTitan/{tumor}.log"
 	shell:
 		"Rscript {params.combineSVCNscript} --tumID {wildcards.tumor} --normID {params.normID} --tenX_funcs {params.tenXfuncs} --svaba_funcs {params.svabafuncs} --svabaVCF {input.svabaVCF} --manualSVFile {params.manualSVfile} --titanBinFile {input.titanBinFile} --titanSegFile {input.titanSegFile} --LRsummaryFile {input.LRsummaryFile} --LRsvFile {input.LRsvFile} --grocsvsFile {input.grocFile} --genomeBuild {params.genomeBuild} --genomeStyle {params.genomeStyle} --chrs \"{params.chrs}\" --outDir results/combineSvabaGrocsvsTitan/{wildcards.tumor}/ --outputSVFile {output.outputSVFile} --outputCNFile {output.outputCNFile} --outputBedpeFile {output.outputBedpeFile} > {log} 2> {log}"
