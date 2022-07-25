@@ -41,14 +41,10 @@ rule all:
  		
 rule getLongRangerSomaticSV:
 	input:
-		#tumSVFile=lambda wildcards: getLRFullPath(config["samples"][wildcards.tumor], "large_sv_calls.bedpe"),
-		#normSVFile=lambda wildcards: getLRFullPath(config["samples"][config["pairings"][wildcards.tumor]], ""),
-		#tumDelFile=lambda wildcards: getLRFullPath(config["samples"][wildcards.tumor], "dels.vcf.gz"),
-		#normDelFile=lambda wildcards: getLRFullPath(config["samples"][config["pairings"][wildcards.tumor]], "dels.vcf.gz")
-		tumSVFile= expand("config["samples"][wildcards.tumor]/large_sv_calls.bedpe", tumor=config["pairings"]),
-		normSVFile=expand("config["samples"][config["pairings"][wildcards.tumor]]/large_sv_calls.bedpe",tumor=config["pairings"]),
-		tumDelFile=expand("config["samples"][wildcards.tumor]/dels.vcf.gz", tumor=config["pairings"]),
-		normDelFile=("config["samples"][config["pairings"][wildcards.tumor]]/dels.vcf.gz",tumor=config["pairings"])
+		tumSVFile=lambda wildcards: getLRFullPath(config["samples"][wildcards.tumor], "large_sv_calls.bedpe"),
+		normSVFile=lambda wildcards: getLRFullPath(config["samples"][config["pairings"][wildcards.tumor]], ""),
+		tumDelFile=lambda wildcards: getLRFullPath(config["samples"][wildcards.tumor], "dels.vcf.gz"),
+		normDelFile=lambda wildcards: getLRFullPath(config["samples"][config["pairings"][wildcards.tumor]], "dels.vcf.gz")
 			
 	output:
 		outputSVFile="results/LongRangerSomaticSV/{tumor}/{tumor}.LR.somatic.sv.txt",
