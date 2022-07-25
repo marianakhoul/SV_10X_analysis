@@ -95,7 +95,7 @@ rule combineSvabaTitan:
 		normID=lambda wildcards: config["pairings"][wildcards.tumor],
 		tenXfuncs=config["tenX_funcs"],
 		svabafuncs=config["svaba_funcs"],
-		manualSVfile=config["manualSVFile"],
+		#manualSVfile=config["manualSVFile"],
 		genomeBuild=config["genomeBuild"],
 		genomeStyle=config["genomeStyle"],
 		chrs=config["chrs"],
