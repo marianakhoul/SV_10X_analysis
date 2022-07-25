@@ -5,7 +5,7 @@ ml R/3.6.2-foss-2019b-fh1
 ml Python/3.7.4-foss-2019b-fh1
 ml SAMtools/1.10-GCCcore-8.3.0
 
-snakemake -s combineSvabaGrocsvsTitan.snakefile --latency-wait 60 --restart-times 2 --keep-going --cluster-config config/cluster_slurm.yaml --cluster "sbatch -p {cluster.partition} --mem={cluster.mem} -t {cluster.time} -c {cluster.ncpus} -n {cluster.ntasks} -o {cluster.output}" -j 50 -np
+snakemake -s combineSvabaTitan.snakefile --latency-wait 60 --restart-times 2 --keep-going --cluster-config config/cluster_slurm.yaml --cluster "sbatch -p {cluster.partition} --mem={cluster.mem} -t {cluster.time} -c {cluster.ncpus} -n {cluster.ntasks} -o {cluster.output}" -j 50 -np
 """
 
 configfile: "config/config.yaml"
@@ -19,9 +19,6 @@ def getLRFullPath(base, filename):
 def getTITANpath(base, id, ext):
   return glob.glob(''.join([base, "titan/optimalClusterSolution/", id, "_cluster*", ext]))
 
-def getGROCpath(base, id):
-  m = re.search('[0-9]+', id)
-  return glob.glob(''.join([base, m.group(), "/results/PostprocessingStep/svs.vcf"]))
 
 CHRS = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,'X']
 
@@ -34,12 +31,12 @@ rule all:
   	expand("results/LongRangerSomaticSV/{tumor}/{tumor}.LR.germline.sv.txt", tumor=config["pairings"]),
   	"results/panelOfNormalsSV/PanelOfNormalsSV.txt",
 	"results/panelOfNormalsSV/PoNBlacklistBins.txt",
-  	expand("results/combineSvabaGrocsvsTitan/{tumor}/{tumor}.svabaTitan.sv.txt", tumor=config["pairings"]),
-  	expand("results/combineSvabaGrocsvsTitan/{tumor}/{tumor}.svabaTitan.cn.txt", tumor=config["pairings"]),
-  	expand("results/combineSvabaGrocsvsTitan/{tumor}/{tumor}.svabaTitan.sv.bedpe", tumor=config["pairings"]),
- 	expand("results/combineSvabaGrocsvsTitan/{tumor}/{tumor}.svabaTitan.sv.annotPoN.bedpe", tumor=config["pairings"]),
-	expand("results/combineSvabaGrocsvsTitan/{tumor}/{tumor}.svabaTitan.sv.PoNToolFilter.bedpe", tumor=config["pairings"]),
-  	expand("results/plotSvabaGrocsvsTitan/{tumor}/{tumor}_CNA-SV-BX_{type}_chr{chr}.{format}", tumor=config["pairings"], type=config["plot_type"], chr=CHRS, format=config["plot_format"]),
+  	expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.txt", tumor=config["pairings"]),
+  	expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.cn.txt", tumor=config["pairings"]),
+  	expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.bedpe", tumor=config["pairings"]),
+ 	expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.annotPoN.bedpe", tumor=config["pairings"]),
+	expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.PoNToolFilter.bedpe", tumor=config["pairings"]),
+  	expand("results/plotSvabaTitan/{tumor}/{tumor}_CNA-SV-BX_{type}_chr{chr}.{format}", tumor=config["pairings"], type=config["plot_type"], chr=CHRS, format=config["plot_format"]),
    	expand("results/plotCircos/{tumor}/{tumor}_Circos.pdf", tumor=config["pairings"])
  		
 rule getLongRangerSomaticSV:
@@ -81,14 +78,14 @@ rule buildPoN:
 	shell:
 		"Rscript {params.buildPoNscript} --SVABAdir {input.svabaDir} --LRdir {input.lrDir} --svaba_funcs {params.svabafuncs} --genomeBuild {params.genomeBuild} --genomeStyle {params.genomeStyle} --chrs \"{params.chrs}\" --outputPoNFile {output.outputPoNFile} --outputBlackListFile {output.outputBlackListFile} > {log} 2> {log}"
 
-rule combineSvabaGrocsvsTitan:
+rule combineSvabaTitan:
 	input:
 		LRsummaryFile=lambda wildcards: getLRFullPath(config["samples"][wildcards.tumor], "summary.csv"),
 		svabaVCF="results/barcodeRescue/{tumor}.bxOverlap.vcf",
 		titanBinFile=lambda wildcards: getTITANpath(config["titan_results"], wildcards.tumor, ".titan.ichor.cna.txt"),
 		titanSegFile=lambda wildcards: getTITANpath(config["titan_results"], wildcards.tumor, ".titan.ichor.seg.noSNPs.txt"),
 		LRsvFile="results/LongRangerSomaticSV/{tumor}/{tumor}.LR.somatic.sv.txt",
-		grocFile=lambda wildcards: getGROCpath(config["grocsvs_results"], wildcards.tumor),
+		#grocFile=lambda wildcards: getGROCpath(config["grocsvs_results"], wildcards.tumor),
 	output:
 		outputSVFile="results/combineSvabaGrocsvsTitan/{tumor}/{tumor}.svabaTitan.sv.txt",
 		outputBedpeFile="results/combineSvabaGrocsvsTitan/{tumor}/{tumor}.svabaTitan.sv.bedpe",
@@ -113,43 +110,43 @@ rule combineSvabaGrocsvsTitan:
 
 rule annotatePoNSV:
 	input:
-		svFile="results/combineSvabaGrocsvsTitan/{tumor}/{tumor}.svabaTitan.sv.txt",
+		svFile="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.txt",
 		PoNFile="results/panelOfNormalsSV/PanelOfNormalsSV.txt",
 		blackListFile="results/panelOfNormalsSV/PoNBlacklistBins.txt"
 	output:
-		outputSVAnnotFile="results/combineSvabaGrocsvsTitan/{tumor}/{tumor}.svabaTitan.sv.annotPoN.bedpe",
+		outputSVAnnotFile="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.annotPoN.bedpe",
 	params:
 		annotScript=config["annotPoNSV_script"],
 		svabafuncs=config["svaba_funcs"],
 	log:
-		"logs/combineSvabaGrocsvsTitan/{tumor}.annotPoNSV.log"
+		"logs/combineSvabaTitan/{tumor}.annotPoNSV.log"
 	shell:
 		"Rscript {params.annotScript} --id {wildcards.tumor} --svaba_funcs {params.svabafuncs} --svFile {input.svFile} --PoNFile {input.PoNFile} --blackListFile {input.blackListFile} --outputSVAnnotFile {output.outputSVAnnotFile} 2> {log} > {log}"
 
 rule filterSVs:
 	input:
-		svFile="results/combineSvabaGrocsvsTitan/{tumor}/{tumor}.svabaTitan.sv.annotPoN.bedpe"
+		svFile="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.annotPoN.bedpe"
 	output:
-		outputSVFiltFile="results/combineSvabaGrocsvsTitan/{tumor}/{tumor}.svabaTitan.sv.PoNToolFilter.bedpe",
-		outputSummaryFile="results/combineSvabaGrocsvsTitan/{tumor}/{tumor}.svabaTitan.sv.PoNToolFilter.summary.txt"
+		outputSVFiltFile="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.PoNToolFilter.bedpe",
+		outputSummaryFile="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.PoNToolFilter.summary.txt"
 	params:
 		filterScript=config["filterSVs_script"],
 		minFreqPoNSVBkptOverlap=config["PoN_minFreqSVbkpts"],
 		# minFreqPoNCNVBkptOverlap=config["PoN_minFreqCNV"],
 		minFreqPoNBlackList=config["PoN_minFreqBlackList"]
 	log:
-		"logs/combineSvabaGrocsvsTitan/{tumor}.filterSVs.log"
+		"logs/combineSvabaTitan/{tumor}.filterSVs.log"
 	shell:
 		"Rscript {params.filterScript} --id {wildcards.tumor} --svFile {input.svFile} --minFreqPoNSVBkptOverlap {params.minFreqPoNSVBkptOverlap} --minFreqPoNBlackList {params.minFreqPoNBlackList} --outputSVFile {output.outputSVFiltFile} --outputSummary {output.outputSummaryFile} 2> {log} > {log}"
 
-rule plotSvabaGrocsvsTitan:
+rule plotSvabaTitan:
 	input:
-		svabaVCF="results/combineSvabaGrocsvsTitan/{tumor}/{tumor}.svabaTitan.sv.PoNToolFilter.bedpe",
+		svabaVCF="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.PoNToolFilter.bedpe",
 		titanBinFile=lambda wildcards: getTITANpath(config["titan_results"], wildcards.tumor, ".titan.ichor.cna.txt"),
 		titanSegFile=lambda wildcards: getTITANpath(config["titan_results"], wildcards.tumor, ".titan.ichor.seg.noSNPs.txt"),
 		titanParamFile=lambda wildcards: getTITANpath(config["titan_results"], wildcards.tumor, ".params.txt")
 	output:
-		"results/plotSvabaGrocsvsTitan/{tumor}/{tumor}_CNA-SV-BX_{type}_chr{chr}.{format}"
+		"results/plotSvabaTitan/{tumor}/{tumor}_CNA-SV-BX_{type}_chr{chr}.{format}"
 	params:
 		plotSVCNscript=config["plotSVCN_script"],
 		tenXfuncs=config["tenX_funcs"],
@@ -169,7 +166,7 @@ rule plotSvabaGrocsvsTitan:
 		size=config["plot_size"],
 		format=config["plot_format"]	
 	log:
-		"logs/plotSvabaGrocsvsTitan/{tumor}/{tumor}_CNA-SV-BX_{type}_chr{chr}.{format}.log"
+		"logs/plotSvabaTitan/{tumor}/{tumor}_CNA-SV-BX_{type}_chr{chr}.{format}.log"
 	shell:
 		"Rscript {params.plotSVCNscript} --id {wildcards.tumor} --tenX_funcs {params.tenXfuncs} --svaba_funcs {params.svabafuncs} --plot_funcs {params.plotfuncs} --titan_libdir {params.libdir} --svFile {input.svabaVCF} --titanBinFile {input.titanBinFile} --titanSegFile {input.titanSegFile} --titanParamFile {input.titanParamFile} --chrs {wildcards.chr} --genomeBuild {params.genomeBuild} --genomeStyle {params.genomeStyle} --cytobandFile {params.cytobandFile} --start {params.start} --end {params.end} --zoom {params.zoom} --plotYlim \"{params.ylim}\" --geneFile {params.geneFile} --plotCNAtype {params.type} --plotSize \"{params.size}\" --outPlotFile {output} > {log} 2> {log}" 
 
