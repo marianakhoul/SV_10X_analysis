@@ -57,7 +57,7 @@ rule getLongRangerSomaticSV:
 	log:
 		"logs/LongRangerSomaticSV/{tumor}.log"
 	shell:
-		"echo {input.tumSVFile}
+		"echo {input.tumSVFile}"
 		#Rscript {params.getLRscript} --id {wildcards.tumor} --tenX_funcs {params.tenXfuncs} --tumLargeSVFile {input.tumSVFile} --normLargeSVFile {input.normSVFile} --tumDeletionFile {input.tumDelFile} --normDeletionFile {input.normDelFile} --genomeBuild {params.genomeBuild} --genomeStyle {params.genomeStyle} --chrs \"{params.chrs}\" --outDir results/LongRangerSomaticSV/{wildcards.tumor}/ --outputSVFile {output.outputSVFile} --outputNormSVFile {output.outputNormSVFile} > {log} 2> {log}"
 
 rule buildPoN:
