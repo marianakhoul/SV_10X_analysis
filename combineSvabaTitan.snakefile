@@ -104,32 +104,3 @@ rule barcodeRescue:
 	shell:
 		"Rscript {params.bxRescueScript} --tenX_funcs {params.tenXfuncs} --svaba_funcs {params.svabafuncs} --id {params.id} --tumBam {input.tumBam} --vcf {input.unfiltVCF} --bps {input.bps} --chrs \"{params.chrs}\" --genomeStyle {params.genomeStyle} --genomeBuild {params.genomeBuild} --minMapQ {params.minMapQ} --minLength {params.minLength} --windowSize {params.windowSize} --minReadOverlapSupport {params.minRead} --outFile {output} > {log} 2> {log}"
 
-rule combineSvabaTitan:
-	input:
-		LRsummaryFile=lambda wildcards: getLRFullPath(config["samples"][wildcards.tumor], "summary.csv"),
-		svabaVCF="results/barcodeRescue/{tumor}.bxOverlap.vcf",
-		titanBinFile=lambda wildcards: getTITANpath(config["titan_results"], wildcards.tumor, ".titan.ichor.cna.txt"),
-		titanSegFile=lambda wildcards: getTITANpath(config["titan_results"], wildcards.tumor, ".titan.ichor.seg.noSNPs.txt"),
-		LRsvFile="results/LongRangerSomaticSV/{tumor}/{tumor}.LR.somatic.sv.txt",
-		#grocFile=lambda wildcards: getGROCpath(config["grocsvs_results"], wildcards.tumor),
-	output:
-		outputSVFile="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.txt",
-		outputBedpeFile="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.bedpe",
-		outputCNFile="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.cn.txt"
-	params:
-		combineSVCNscript=config["combineSVCN_script"],
-		normID=lambda wildcards: config["pairings"][wildcards.tumor],
-		tenXfuncs=config["tenX_funcs"],
-		svabafuncs=config["svaba_funcs"],
-		#manualSVfile=config["manualSVFile"],
-		genomeBuild=config["genomeBuild"],
-		genomeStyle=config["genomeStyle"],
-		chrs=config["chrs"],
-		minMapQ=config["bxRescue_minMapQ"],
-		minLength=config["bxRescue_minLength"],
-		windowSize=config["bxRescue_windowSize"],
-		minRead=config["bxRescue_minReadOverlapSupport"]	
-	log:
-		"logs/combineSvabaTitan/{tumor}.log"
-	shell:
-		"Rscript {params.combineSVCNscript} --tumID {wildcards.tumor} --normID {params.normID} --tenX_funcs {params.tenXfuncs} --svaba_funcs {params.svabafuncs} --svabaVCF {input.svabaVCF} --manualSVFile {params.manualSVfile} --titanBinFile {input.titanBinFile} --titanSegFile {input.titanSegFile} --LRsummaryFile {input.LRsummaryFile} --LRsvFile {input.LRsvFile} --grocsvsFile {input.grocFile} --genomeBuild {params.genomeBuild} --genomeStyle {params.genomeStyle} --chrs \"{params.chrs}\" --outDir results/combineSvabaGrocsvsTitan/{wildcards.tumor}/ --outputSVFile {output.outputSVFile} --outputCNFile {output.outputCNFile} --outputBedpeFile {output.outputBedpeFile} > {log} 2> {log}"
