@@ -29,8 +29,8 @@ rule all:
   input: 
   	expand("results/LongRangerSomaticSV/{tumor}/{tumor}.LR.somatic.sv.txt", tumor=config["pairings"]),
   	expand("results/LongRangerSomaticSV/{tumor}/{tumor}.LR.germline.sv.txt", tumor=config["pairings"]),
-  	#"results/panelOfNormalsSV/PanelOfNormalsSV.txt",
-	#"results/panelOfNormalsSV/PoNBlacklistBins.txt",
+  	"results/panelOfNormalsSV/PanelOfNormalsSV.txt",
+	"results/panelOfNormalsSV/PoNBlacklistBins.txt",
   	#expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.txt", tumor=config["pairings"]),
   	#expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.cn.txt", tumor=config["pairings"]),
   	#expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.bedpe", tumor=config["pairings"]),
@@ -59,3 +59,23 @@ rule getLongRangerSomaticSV:
 		"logs/LongRangerSomaticSV/{tumor}.log"
 	shell:
 		"Rscript {params.getLRscript} --id {wildcards.tumor} --tenX_funcs {params.tenXfuncs} --tumLargeSVFile {input.tumSVFile} --normLargeSVFile {input.normSVFile} --tumDeletionFile {input.tumDelFile} --normDeletionFile {input.normDelFile} --genomeBuild {params.genomeBuild} --genomeStyle {params.genomeStyle} --chrs \"{params.chrs}\" --outDir results/LongRangerSomaticSV/{wildcards.tumor}/ --outputSVFile {output.outputSVFile} --outputNormSVFile {output.outputNormSVFile} > {log} 2> {log}"
+		
+rule buildPoN:
+	input:
+		svabaDir="results/svaba/",
+		lrDir="results/LongRangerSomaticSV/"
+	output:
+		outputPoNFile="results/panelOfNormalsSV/PanelOfNormalsSV.txt",
+		outputBlackListFile="results/panelOfNormalsSV/PoNBlacklistBins.txt"
+	params:
+		buildPoNscript=config["buildPoN_script"],
+		blackListBinWidth=config["PoN_blackListBinWidth"],
+		svabafuncs=config["svaba_funcs"],
+		genomeBuild=config["genomeBuild"],
+		genomeStyle=config["genomeStyle"],
+		chrs=config["chrs"]
+	log:
+		"logs/panelOfNormalsSV/panelOfNormalsSV.log"
+	shell:
+		"Rscript {params.buildPoNscript} --SVABAdir {input.svabaDir} --LRdir {input.lrDir} --svaba_funcs {params.svabafuncs} --genomeBuild {params.genomeBuild} --genomeStyle {params.genomeStyle} --chrs \"{params.chrs}\" --outputPoNFile {output.outputPoNFile} --outputBlackListFile {output.outputBlackListFile} > {log} 2> {log}"
+
