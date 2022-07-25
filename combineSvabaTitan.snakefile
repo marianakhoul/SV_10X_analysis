@@ -31,11 +31,11 @@ rule all:
   	expand("results/LongRangerSomaticSV/{tumor}/{tumor}.LR.germline.sv.txt", tumor=config["pairings"]),
   	"results/panelOfNormalsSV/PanelOfNormalsSV.txt",
 	"results/panelOfNormalsSV/PoNBlacklistBins.txt",
-  	#expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.txt", tumor=config["pairings"]),
-  	#expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.cn.txt", tumor=config["pairings"]),
-  	#expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.bedpe", tumor=config["pairings"]),
- 	#expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.annotPoN.bedpe", tumor=config["pairings"]),
-	#expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.PoNToolFilter.bedpe", tumor=config["pairings"]),
+  	expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.txt", tumor=config["pairings"]),
+  	expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.cn.txt", tumor=config["pairings"]),
+  	expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.bedpe", tumor=config["pairings"]),
+ 	expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.annotPoN.bedpe", tumor=config["pairings"]),
+	expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.PoNToolFilter.bedpe", tumor=config["pairings"]),
   	#expand("results/plotSvabaTitan/{tumor}/{tumor}_CNA-SV-BX_{type}_chr{chr}.{format}", tumor=config["pairings"], type=config["plot_type"], chr=CHRS, format=config["plot_format"]),
    	#expand("results/plotCircos/{tumor}/{tumor}_Circos.pdf", tumor=config["pairings"])
  		
@@ -79,3 +79,32 @@ rule buildPoN:
 	shell:
 		"Rscript {params.buildPoNscript} --SVABAdir {input.svabaDir} --LRdir {input.lrDir} --svaba_funcs {params.svabafuncs} --genomeBuild {params.genomeBuild} --genomeStyle {params.genomeStyle} --chrs \"{params.chrs}\" --outputPoNFile {output.outputPoNFile} --outputBlackListFile {output.outputBlackListFile} > {log} 2> {log}"
 
+rule combineSvabaTitan:
+	input:
+		LRsummaryFile=lambda wildcards: getLRFullPath(config["samples"][wildcards.tumor], "summary.csv"),
+		svabaVCF="results/barcodeRescue/{tumor}.bxOverlap.vcf",
+		titanBinFile=lambda wildcards: getTITANpath(config["titan_results"], wildcards.tumor, ".titan.ichor.cna.txt"),
+		titanSegFile=lambda wildcards: getTITANpath(config["titan_results"], wildcards.tumor, ".titan.ichor.seg.noSNPs.txt"),
+		LRsvFile="results/LongRangerSomaticSV/{tumor}/{tumor}.LR.somatic.sv.txt",
+		#grocFile=lambda wildcards: getGROCpath(config["grocsvs_results"], wildcards.tumor),
+	output:
+		outputSVFile="results/combineSvabaGrocsvsTitan/{tumor}/{tumor}.svabaTitan.sv.txt",
+		outputBedpeFile="results/combineSvabaGrocsvsTitan/{tumor}/{tumor}.svabaTitan.sv.bedpe",
+		outputCNFile="results/combineSvabaGrocsvsTitan/{tumor}/{tumor}.svabaTitan.cn.txt"
+	params:
+		combineSVCNscript=config["combineSVCN_script"],
+		normID=lambda wildcards: config["pairings"][wildcards.tumor],
+		tenXfuncs=config["tenX_funcs"],
+		svabafuncs=config["svaba_funcs"],
+		#manualSVfile=config["manualSVFile"],
+		genomeBuild=config["genomeBuild"],
+		genomeStyle=config["genomeStyle"],
+		chrs=config["chrs"],
+		minMapQ=config["bxRescue_minMapQ"],
+		minLength=config["bxRescue_minLength"],
+		windowSize=config["bxRescue_windowSize"],
+		minRead=config["bxRescue_minReadOverlapSupport"]	
+	log:
+		"logs/combineSvabaGrocsvsTitan/{tumor}.log"
+	shell:
+		"Rscript {params.combineSVCNscript} --tumID {wildcards.tumor} --normID {params.normID} --tenX_funcs {params.tenXfuncs} --svaba_funcs {params.svabafuncs} --svabaVCF {input.svabaVCF} --manualSVFile {params.manualSVfile} --titanBinFile {input.titanBinFile} --titanSegFile {input.titanSegFile} --LRsummaryFile {input.LRsummaryFile} --LRsvFile {input.LRsvFile} --grocsvsFile {input.grocFile} --genomeBuild {params.genomeBuild} --genomeStyle {params.genomeStyle} --chrs \"{params.chrs}\" --outDir results/combineSvabaGrocsvsTitan/{wildcards.tumor}/ --outputSVFile {output.outputSVFile} --outputCNFile {output.outputCNFile} --outputBedpeFile {output.outputBedpeFile} > {log} 2> {log}"
