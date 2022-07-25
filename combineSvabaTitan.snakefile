@@ -31,6 +31,7 @@ rule all:
   	expand("results/LongRangerSomaticSV/{tumor}/{tumor}.LR.germline.sv.txt", tumor=config["pairings"]),
   	"results/panelOfNormalsSV/PanelOfNormalsSV.txt",
 	"results/panelOfNormalsSV/PoNBlacklistBins.txt",
+	expand("results/barcodeRescue/{tumor}.bxOverlap.vcf", tumor=config["pairings"]),
   	expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.txt", tumor=config["pairings"]),
   	expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.cn.txt", tumor=config["pairings"]),
   	expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.bedpe", tumor=config["pairings"]),
@@ -78,6 +79,30 @@ rule buildPoN:
 		"logs/panelOfNormalsSV/panelOfNormalsSV.log"
 	shell:
 		"Rscript {params.buildPoNscript} --SVABAdir {input.svabaDir} --LRdir {input.lrDir} --svaba_funcs {params.svabafuncs} --genomeBuild {params.genomeBuild} --genomeStyle {params.genomeStyle} --chrs \"{params.chrs}\" --outputPoNFile {output.outputPoNFile} --outputBlackListFile {output.outputBlackListFile} > {log} 2> {log}"
+
+rule barcodeRescue:
+	input:
+		tumBam=lambda wildcards: getLRFullPath(config["samples"][wildcards.tumor], config["bamFileName"]),
+		unfiltVCF="results/svaba/{tumor}/{tumor}.svaba.unfiltered.somatic.sv.vcf",
+		bps="results/svaba/{tumor}/{tumor}.bps.txt.gz"
+	output:
+		"results/barcodeRescue/{tumor}.bxOverlap.vcf"
+	params:
+		bxRescueScript=config["bxRescue_script"],
+		id="{tumor}",
+		tenXfuncs=config["tenX_funcs"],
+		svabafuncs=config["svaba_funcs"],
+		genomeBuild=config["genomeBuild"],
+		genomeStyle=config["genomeStyle"],
+		chrs=config["chrs"],
+		minMapQ=config["bxRescue_minMapQ"],
+		minLength=config["bxRescue_minLength"],
+		windowSize=config["bxRescue_windowSize"],
+		minRead=config["bxRescue_minReadOverlapSupport"]	
+	log:
+		"logs/barcodeRescue/{tumor}.bxOverlap.log"
+	shell:
+		"Rscript {params.bxRescueScript} --tenX_funcs {params.tenXfuncs} --svaba_funcs {params.svabafuncs} --id {params.id} --tumBam {input.tumBam} --vcf {input.unfiltVCF} --bps {input.bps} --chrs \"{params.chrs}\" --genomeStyle {params.genomeStyle} --genomeBuild {params.genomeBuild} --minMapQ {params.minMapQ} --minLength {params.minLength} --windowSize {params.windowSize} --minReadOverlapSupport {params.minRead} --outFile {output} > {log} 2> {log}"
 
 rule combineSvabaTitan:
 	input:
