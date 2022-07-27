@@ -78,6 +78,7 @@ for (i in 1:length(sampleList)){
 	# load and combine SVABA SV results
 	suppressWarnings(svSample <- loadVCFtoDataTableByChromosome(normSVABAFiles[sampleList[i]], 
 			chr=chrs, genomeStyle=genomeStyle, applyFilter = FALSE))
+	message("HERE")
 	sv.SVABA <- rbind(sv.SVABA, cbind(Sample = id, svSample))
 }
 save.image(outImage)
