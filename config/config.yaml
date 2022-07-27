@@ -50,6 +50,7 @@ bxRescue_windowSize:  1000
 bxRescue_minReadOverlapSupport:  2
 
 ## Plotting parameters ##
+plot_id: "DTRCC6_chr1_9_17"
 plot_zoom:  FALSE
 plot_chrs:  c(1:22, \"X\") # "None" will also plot all chromosomes
 plot_startPos:  None
