@@ -51,7 +51,7 @@ if (!require(bsg, character.only=TRUE, quietly=TRUE, warn.conflicts=FALSE)) {
 } else {
 	seqinfo <- seqinfo(get(bsg))
 }
-seqinfo <- seqinfo[chrs]
+#seqinfo <- seqinfo[chrs]
 
 buffer <- 100
 minQual <- 20
