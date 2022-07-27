@@ -22,19 +22,17 @@ def getTITANpath(base, id, ext):
 
 CHRS = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,'X']
 
-#TUM, CLUST = glob_wildcards("../../TITAN/snakemake/results/titan/optimalClusterSolution/{tum}_cluster1.titan.ichor.cna.txt")
-#SEG,CLUST = glob_wildcards(config["titanPath"], "/results/titan/optimalClusterSolution/{tumor}_cluster{clust}.titan.ichor.cna.txt")
 
 rule all:
   input: 
-  	expand("results/LongRangerSomaticSV/{tumor}/{tumor}.LR.somatic.sv.txt", tumor=config["pairings"]),
-  	expand("results/LongRangerSomaticSV/{tumor}/{tumor}.LR.germline.sv.txt", tumor=config["pairings"]),
-  	"results/panelOfNormalsSV/PanelOfNormalsSV.txt",
-	"results/panelOfNormalsSV/PoNBlacklistBins.txt",
-	expand("results/barcodeRescue/{tumor}.bxOverlap.vcf", tumor=config["pairings"]),
-  	#expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.txt", tumor=config["pairings"]),
-  	#expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.cn.txt", tumor=config["pairings"]),
-  	#expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.bedpe", tumor=config["pairings"]),
+  	expand("LongRangerSomaticSV/{tumor}/{tumor}.LR.somatic.sv.txt", tumor=config["pairings"]),
+  	expand("LongRangerSomaticSV/{tumor}/{tumor}.LR.germline.sv.txt", tumor=config["pairings"]),
+  	"panelOfNormalsSV/PanelOfNormalsSV.txt",
+	"panelOfNormalsSV/PoNBlacklistBins.txt",
+	expand("barcodeRescue/{tumor}.bxOverlap.vcf", tumor=config["pairings"]),
+  	#expand("combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.txt", tumor=config["pairings"]),
+  	#expand("combineSvabaTitan/{tumor}/{tumor}.svabaTitan.cn.txt", tumor=config["pairings"]),
+  	#expand("combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.bedpe", tumor=config["pairings"]),
  	#expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.annotPoN.bedpe", tumor=config["pairings"]),
 	#expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.PoNToolFilter.bedpe", tumor=config["pairings"]),
   	#expand("results/plotSvabaTitan/{tumor}/{tumor}_CNA-SV-BX_{type}_chr{chr}.{format}", tumor=config["pairings"], type=config["plot_type"], chr=CHRS, format=config["plot_format"]),
@@ -48,8 +46,8 @@ rule getLongRangerSomaticSV:
 		normDelFile=lambda wildcards: getLRFullPath(config["samples"][config["pairings"][wildcards.tumor]], "dels.vcf.gz")
 			
 	output:
-		outputSVFile="results/LongRangerSomaticSV/{tumor}/{tumor}.LR.somatic.sv.txt",
-		outputNormSVFile="results/LongRangerSomaticSV/{tumor}/{tumor}.LR.germline.sv.txt",
+		outputSVFile="LongRangerSomaticSV/{tumor}/{tumor}.LR.somatic.sv.txt",
+		outputNormSVFile="LongRangerSomaticSV/{tumor}/{tumor}.LR.germline.sv.txt",
 	params:
 		getLRscript=config["getLRsomaticSV_script"],		
 		tenXfuncs=config["tenX_funcs"],
@@ -63,11 +61,11 @@ rule getLongRangerSomaticSV:
 		
 rule buildPoN:
 	input:
-		svabaDir="results/svaba/",
-		lrDir="results/LongRangerSomaticSV/"
+		svabaDir="svaba/",
+		lrDir="LongRangerSomaticSV/"
 	output:
-		outputPoNFile="results/panelOfNormalsSV/PanelOfNormalsSV.txt",
-		outputBlackListFile="results/panelOfNormalsSV/PoNBlacklistBins.txt"
+		outputPoNFile="panelOfNormalsSV/PanelOfNormalsSV.txt",
+		outputBlackListFile="panelOfNormalsSV/PoNBlacklistBins.txt"
 	params:
 		buildPoNscript=config["buildPoN_script"],
 		blackListBinWidth=config["PoN_blackListBinWidth"],
@@ -83,10 +81,10 @@ rule buildPoN:
 rule barcodeRescue:
 	input:
 		tumBam=lambda wildcards: getLRFullPath(config["samples"][wildcards.tumor], config["bamFileName"]),
-		unfiltVCF="results/svaba/{tumor}/{tumor}.svaba.unfiltered.somatic.sv.vcf",
-		bps="results/svaba/{tumor}/{tumor}.bps.txt.gz"
+		unfiltVCF="svaba/{tumor}/{tumor}.svaba.unfiltered.somatic.sv.vcf",
+		bps="svaba/{tumor}/{tumor}.bps.txt.gz"
 	output:
-		"results/barcodeRescue/{tumor}.bxOverlap.vcf"
+		"barcodeRescue/{tumor}.bxOverlap.vcf"
 	params:
 		bxRescueScript=config["bxRescue_script"],
 		id="{tumor}",
