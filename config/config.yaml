@@ -1,6 +1,10 @@
 ## path to tools ##
-svaba_exe:  /path/to/svaba
-samTools:  /path/to/samtools
+
+samTools:  /mnt/storage/apps/samtools/1.9/bin/samtools
+bcfTools:  /mnt/storage/apps/bcftools/1.9/bin/bcftools
+svaba_exe:  /home/mi724/Tools/svaba/bin/svaba
+
+
 
 ## path to scripts ##
 tenX_funcs:  code/tenX_utils.R
@@ -17,14 +21,12 @@ plotSVCN_script:  code/plotTitanSvaba.R
 plotCircos_script: code/create_circosPlot.R
 
 ## path to TITAN snakemake root  ##
-titan_libdir:  /path/to/TitanCNA/
-titan_results:  /path/to/TitanCNA/snakemake_results/
+titan_libdir:  /home/mi724/Tools/TitanCNA/
+titan_results:  /home/mi724/Tools/TitanCNA_10X_snakemake/results/
 
-## path to GROCSVS results ##
-grocsvs_results: /path/to/GROCSVS/
 
 ## reference files ##
-refGenome:  /path/to/ref/genome.fasta
+refGenome:  /mnt/storage/labs/sviswanathan/GATK_ref/cz_ref/longranger/refdata-GRCh38-2.1.0/fasta/genome.fasta
 genomeBuild:  hg38
 genomeStyle:  UCSC
 cytobandFile:  data/cytoBand_hg38.txt # only need if hg38
@@ -40,7 +42,7 @@ PoN_minFreqSVbkpts: 2 # 53 * 0.05
 PoN_minFreqBlackList: 5 # 53 * 0.1
 
 ## SVABA settings ##
-svaba_dbSNPindelVCF:  /path/to/known/indels.vcf
+svaba_dbSNPindelVCF:  /mnt/storage/labs/sviswanathan/GATK_ref/Homo_sapiens_assembly38.known_indels.vcf.gz
 svaba_numThreads:  4
 
 ## Barcode Rescue settings ##
@@ -52,7 +54,7 @@ bxRescue_minReadOverlapSupport:  2
 ## Plotting parameters ##
 plot_id: "DTRCC6_chr1_9_17"
 plot_zoom:  FALSE
-plot_chrs:  c(1:22, \"X\") # "None" will also plot all chromosomes
+plot_chrs:  c(1,9,17) # "None" will also plot all chromosomes
 plot_startPos:  None
 plot_endPos:  None
 plot_geneFile:  data/gene_list_72.txt ## include list of genes to annotate on plot
