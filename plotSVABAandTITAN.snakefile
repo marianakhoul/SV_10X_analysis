@@ -8,7 +8,7 @@ def getTITANpath(base, id, ext):
 
 rule all:
   input: 
-  	expand("results/plotSVABAandTITAN/{plotID}/{tumor}_CNA-SV_{type}_chr{chr}-{start}-{end}.{format}", tumor=config["pairings"], plotID=config["plot_id"], type=config["plot_type"], chr=config["plot_chr"], start=config["plot_startPos"], end=config["plot_endPos"], format=config["plot_format"])
+  	expand("results/plotSVABAandTITAN/{plotID}/{tumor}_CNA-SV_{type}_chr{chr}-{start}-{end}.{format}", tumor=config["pairings"], plotID=config["plot_id"], type=config["plot_type"], chr=config["plot_chrs"], start=config["plot_startPos"], end=config["plot_endPos"], format=config["plot_format"])
 	
 		
 rule plotSVABAandTITAN:
