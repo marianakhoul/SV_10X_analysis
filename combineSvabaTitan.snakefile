@@ -61,8 +61,8 @@ rule getLongRangerSomaticSV:
 		
 rule buildPoN:
 	input:
-		svabaDir="results/svaba/",
-		lrDir="results/LongRangerSomaticSV/"
+		svabaDir=expand("results/svaba/{tumor}/", tumor=config["pairings"]),
+		lrDir=expand("results/LongRangerSomaticSV/{tumor}/", tumor=config["pairings"])
 	output:
 		outputPoNFile="results/panelOfNormalsSV/PanelOfNormalsSV.txt",
 		outputBlackListFile="results/panelOfNormalsSV/PoNBlacklistBins.txt"
