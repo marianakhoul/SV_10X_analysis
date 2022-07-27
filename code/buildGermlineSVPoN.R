@@ -5,6 +5,7 @@
 #' date:	  June 20, 2019
 #' description: Build a panel of normal SV breakpoint list with frequencies in the matched normal cohort. Also, outputs binned regions with SV frequencies from the matched normal cohort that can be used as a black list.
 
+options(warn=-1)
 
 library(optparse)
 option_list <- list(
@@ -51,7 +52,7 @@ if (!require(bsg, character.only=TRUE, quietly=TRUE, warn.conflicts=FALSE)) {
 } else {
 	seqinfo <- seqinfo(get(bsg))
 }
-#seqinfo <- seqinfo[chrs]
+seqinfo <- seqinfo[chrs]
 
 buffer <- 100
 minQual <- 20
