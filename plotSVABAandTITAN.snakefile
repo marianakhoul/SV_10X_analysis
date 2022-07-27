@@ -3,7 +3,7 @@ configfile: "config/samples.yaml"
 
 import glob
 def getTITANpath(base, id, ext):
-  return glob.glob(''.join([base, "titan/optimalClusterSolution/", id, "_cluster*", ext]))
+  return glob.glob(''.join([base, "optimalClusterSolution/", id, "_cluster*", ext]))
 
 
 rule all:
