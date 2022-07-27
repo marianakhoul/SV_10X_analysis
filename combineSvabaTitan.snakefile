@@ -46,8 +46,8 @@ rule getLongRangerSomaticSV:
 		normDelFile=lambda wildcards: getLRFullPath(config["samples"][config["pairings"][wildcards.tumor]], "dels.vcf.gz")
 			
 	output:
-		outputSVFile="LongRangerSomaticSV/{tumor}/{tumor}.LR.somatic.sv.txt",
-		outputNormSVFile="LongRangerSomaticSV/{tumor}/{tumor}.LR.germline.sv.txt",
+		outputSVFile="results/LongRangerSomaticSV/{tumor}/{tumor}.LR.somatic.sv.txt",
+		outputNormSVFile="results/LongRangerSomaticSV/{tumor}/{tumor}.LR.germline.sv.txt",
 	params:
 		getLRscript=config["getLRsomaticSV_script"],		
 		tenXfuncs=config["tenX_funcs"],
@@ -61,11 +61,11 @@ rule getLongRangerSomaticSV:
 		
 rule buildPoN:
 	input:
-		svabaDir="svaba/",
-		lrDir="LongRangerSomaticSV/"
+		svabaDir="results/svaba/",
+		lrDir="results/LongRangerSomaticSV/"
 	output:
-		outputPoNFile="panelOfNormalsSV/PanelOfNormalsSV.txt",
-		outputBlackListFile="panelOfNormalsSV/PoNBlacklistBins.txt"
+		outputPoNFile="results/panelOfNormalsSV/PanelOfNormalsSV.txt",
+		outputBlackListFile="results/panelOfNormalsSV/PoNBlacklistBins.txt"
 	params:
 		buildPoNscript=config["buildPoN_script"],
 		blackListBinWidth=config["PoN_blackListBinWidth"],
@@ -81,10 +81,10 @@ rule buildPoN:
 rule barcodeRescue:
 	input:
 		tumBam=lambda wildcards: getLRFullPath(config["samples"][wildcards.tumor], config["bamFileName"]),
-		unfiltVCF="svaba/{tumor}/{tumor}.svaba.unfiltered.somatic.sv.vcf",
-		bps="svaba/{tumor}/{tumor}.bps.txt.gz"
+		unfiltVCF="results/svaba/{tumor}/{tumor}.svaba.unfiltered.somatic.sv.vcf",
+		bps="results/svaba/{tumor}/{tumor}.bps.txt.gz"
 	output:
-		"barcodeRescue/{tumor}.bxOverlap.vcf"
+		"results/barcodeRescue/{tumor}.bxOverlap.vcf"
 	params:
 		bxRescueScript=config["bxRescue_script"],
 		id="{tumor}",
