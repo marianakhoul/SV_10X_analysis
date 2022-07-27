@@ -1,17 +1,14 @@
-configfile: "config/configPlotZoom.yaml"
+configfile: "config/config.yaml"
 configfile: "config/samples.yaml"
 
 import glob
 def getTITANpath(base, id, ext):
   return glob.glob(''.join([base, "titan/optimalClusterSolution/", id, "_cluster*", ext]))
 
-#TUM, CLUST = glob_wildcards("../../TITAN/snakemake/results/titan/optimalClusterSolution/{tum}_cluster1.titan.ichor.cna.txt")
-#SEG,CLUST = glob_wildcards(config["titanPath"], "/results/titan/optimalClusterSolution/{tumor}_cluster{clust}.titan.ichor.cna.txt")
-
 
 rule all:
   input: 
-  	expand("results/plotSVABAandTITAN_zoom/{plotID}/{tumor}_CNA-SV_{type}_chr{chr}-{start}-{end}.{format}", tumor=config["pairings"], plotID=config["plot_id"], type=config["plot_type"], chr=config["plot_chr"], start=config["plot_startPos"], end=config["plot_endPos"], format=config["plot_format"])
+  	expand("results/plotSVABAandTITAN/{plotID}/{tumor}_CNA-SV_{type}_chr{chr}-{start}-{end}.{format}", tumor=config["pairings"], plotID=config["plot_id"], type=config["plot_type"], chr=config["plot_chr"], start=config["plot_startPos"], end=config["plot_endPos"], format=config["plot_format"])
 	
 		
 rule plotSVABAandTITAN:
@@ -21,7 +18,7 @@ rule plotSVABAandTITAN:
 		titanSegFile=lambda wildcards: getTITANpath(config["titan_results"], wildcards.tumor, ".titan.ichor.seg.noSNPs.txt"),
 		titanParamFile=lambda wildcards: getTITANpath(config["titan_results"], wildcards.tumor, ".params.txt")
 	output:
-		"results/plotSVABAandTITAN_zoom/{plotID}/{tumor}_CNA-SV_{type}_chr{chr}-{start}-{end}.{format}"
+		"results/plotSVABAandTITAN/{plotID}/{tumor}_CNA-SV_{type}_chr{chr}-{start}-{end}.{format}"
 	params:
 		plotSVCNscript=config["plotSVCN_script"],
 		tenXfuncs=config["tenX_funcs"],
