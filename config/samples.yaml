@@ -1,9 +1,6 @@
 samples: #format is sample_name: /path/to/sample.bam for both tumors and normals
-  tumor_sample_name1:  /path/to/tumor/sample1.bam
-  tumor_sample_name2:  /path/to/tumor/sample2.bam
-  normal_sample_name1:  /path/to/normal/sample1.bam
-  normal_sample_name2:  /path/to/normal/sample2.bam
+  H2K57CCX2_DTRCC6_LKidneyResection:  /mnt/scratch/LongRanger/H2K57CCX2_DTRCC6_LKidneyResection/outs/
+  H2K57CCX2_DTRCC6_AdjNormal:  /mnt/scratch/LongRanger/H2K57CCX2_DTRCC6_AdjNormal/outs/
 
 pairings: #format is tumor: matched_normal
-  tumor_sample_name1: normal_sample_name1
-  tumor_sample_name2: normal_sample_name2
+  H2K57CCX2_DTRCC6_LKidneyResection: H2K57CCX2_DTRCC6_AdjNormal
