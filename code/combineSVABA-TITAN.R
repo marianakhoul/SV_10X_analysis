@@ -53,7 +53,7 @@ segFile <- opt$titanSegFile
 LRsummaryFile <- opt$LRsummaryFile
 LRsvFile <- opt$LRsvFile
 #grocsvsFile <- opt$grocsvsFile 
-manualSVFile <- opt$manualSVFile
+manualSVFile <- "None"
 outputSVFile <- opt$outputSVFile
 outputCNFile <- opt$outputCNFile
 outputBedpeFile <- opt$outputBedpeFile
