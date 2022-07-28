@@ -77,7 +77,7 @@ for (i in 1:length(sampleList)){
 	sv.LR <- rbind(sv.LR, cbind(Sample=id, svSample))
 	# load and combine SVABA SV results
 	suppressWarnings(svSample <- loadVCFtoDataTableByChromosome(normSVABAFiles[sampleList[i]], 
-			chr=chrs, genomeStyle=genomeStyle, applyFilter = FALSE))
+			chr=chrs, genomeStyle=genomeStyle, applyFilter = TRUE))
 	
 	sv.SVABA <- rbind(sv.SVABA, cbind(Sample = id, svSample))
 	
