@@ -280,7 +280,7 @@ svaba[SV.id %in% c(indCN1) & support.orig == "BX", support := "RESCUE,CN1"]
 svaba[SV.id %in% c(indBXCN1) & support.orig == "BX", support := "BX,CN1"]
 svaba[SV.id %in% c(indCN2) & support.orig == "BX", support := "RESCUE,CN2"]
 svaba[SV.id %in% c(indBXCN2,indCN.interChr) & support.orig == "BX", support := "BX,CN2"]
-svaba[!SV.id %in% c(indBX, indSVABA, indManual, indFBI, indCN.interChr, indCN1, indCN2, indBXCN1, indBXCN2), support := NA]
+svaba[!SV.id %in% c(indBX, indSVABA, indFBI, indCN.interChr, indCN1, indCN2, indBXCN1, indBXCN2), support := NA]
 svaba[, support.orig := NULL]
 svabaAll <- copy(svaba); setkey(svabaAll, SV.id)
 svabaAll[, Mean.Molecule.Length := meanLength]
