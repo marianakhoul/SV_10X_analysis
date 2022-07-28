@@ -22,7 +22,7 @@ plotCircos_script: code/create_circosPlot.R
 
 ## path to TITAN snakemake root  ##
 titan_libdir:  /home/mi724/Tools/TitanCNA/
-titan_results:  /home/mi724/Tools/TitanCNA_10X_snakemake/results/
+titan_results:  /home/mi724/Tools/TitanCNA_10X_snakemake/results/optimalClusterSolution/
 
 
 ## reference files ##
