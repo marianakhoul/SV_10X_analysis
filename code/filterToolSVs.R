@@ -52,10 +52,9 @@ sv <- fread(svFile, na.string = ".")
 sv <- sv[, SV.id := NULL]
 sv <- cbind(SV.id = 1:nrow(sv), sv)
 sv[, Tool.multi := Tool] 
-sv[!is.na(overlap.SVABA.id) & !is.na(overlap.GROCSVS.id) & is.na(overlap.LONGRANGER.id), Tool.multi := "SVABA,GROCSVS"]
-sv[!is.na(overlap.SVABA.id) & is.na(overlap.GROCSVS.id) & !is.na(overlap.LONGRANGER.id), Tool.multi := "SVABA,LONGRANGER"]
-sv[!is.na(overlap.SVABA.id) & !is.na(overlap.GROCSVS.id) & !is.na(overlap.LONGRANGER.id), Tool.multi := "SVABA,GROCSVS,LONGRANGER"]
-sv[is.na(overlap.SVABA.id) & !is.na(overlap.GROCSVS.id) & !is.na(overlap.LONGRANGER.id), Tool.multi := "GROCSVS,LONGRANGER"]
+sv[!is.na(overlap.SVABA.id) & is.na(overlap.LONGRANGER.id), Tool.multi := "SVABA"]
+sv[!is.na(overlap.SVABA.id) & !is.na(overlap.LONGRANGER.id), Tool.multi := "SVABA,LONGRANGER"]
+sv[is.na(overlap.SVABA.id) & !is.na(overlap.LONGRANGER.id), Tool.multi := "LONGRANGER"]
 
 
 #begin filtering
@@ -69,7 +68,7 @@ sv[is.na(overlap.SVABA.id) & !is.na(overlap.GROCSVS.id) & !is.na(overlap.LONGRAN
 sv <- sv[!(start_1 == 0 | start_2 == 0)]
 sv[is.na(SV.PoN.sampleCount_1), SV.PoN.sampleCount_1 := 0]
 sv[is.na(SV.PoN.sampleCount_2), SV.PoN.sampleCount_2 := 0]
-germSV.ind <- sv[Tool %in% c("SVABA", "GROCSVS") &
+germSV.ind <- sv[Tool %in% c("SVABA") &
 				 (SV.PoN.sampleCount_1 >= minFreqPoNSVBkptOverlap | 
 						SV.PoN.sampleCount_2 >= minFreqPoNSVBkptOverlap) | 
 					  (SV.blacklist.sampleCount_1 >= minFreqPoNBlackList | 
@@ -108,7 +107,7 @@ for (i in 1:numSamples){
 	
     # only apply to samples with Mean.Molecule.Length > minMoleculeLength
 	molLen <- sv.sample[, unique(Mean.Molecule.Length)][1]
-	toolInfo <- sv.sample[, .(overlap.SVABA.id, overlap.GROCSVS.id, overlap.LONGRANGER.id)]
+	toolInfo <- sv.sample[, .(overlap.SVABA.id, overlap.LONGRANGER.id)]
 	toolExclude.sample.ind <- which(rowSums(!is.na(toolInfo)) < minNumTools)
 	numSVexclude <- length(toolExclude.sample.ind)
 	
@@ -161,8 +160,8 @@ sv[Tool.multi == "LONGRANGER" & support %in% c("CN", "NoCNsupport"), SV.Filter :
 #### KEEP SVs ######
 ###########################################################
 # for SVs flagged as PoN or ShortSV but predicted multiple tools --> keep
-#sv[Tool.multi == "SVABA,GROCSVS" | Tool.multi == "SVABA,LONGRANGER" | 
-#	Tool.multi == "SVABA,GROCSVS,LONGRANGER" | Tool.multi == "GROCSVS,LONGRANGER", SV.Filter := "KEEP"]
+#sv[Tool.multi == "SVABA" | Tool.multi == "SVABA,LONGRANGER" | 
+#	Tool.multi == "SVABA,LONGRANGER" | Tool.multi == "LONGRANGER", SV.Filter := "KEEP"]
 
 # rest of the SVs with not Filter classification, then keep 
 sv[is.na(SV.Filter), SV.Filter := "KEEP"]
