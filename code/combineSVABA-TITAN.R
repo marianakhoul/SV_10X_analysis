@@ -137,7 +137,7 @@ svaba <- cbind(Sample = tumId, svaba)
 ############# LOAD SVABA MANUAL CURATED SV ############
 #######################################################
 # include manually curated SVs to the list
-if (!is.na(manualSVFile)){
+if (!is.na(manualSVFile)){ # the none option was removed
 	message("Loading manual SV file: ", manualSVFile)
 	manualSvaba <- fread(manualSVFile)
 	manualSvaba <- manualSvaba[Sample == tumId]
@@ -157,6 +157,9 @@ svaba <- cbind(SV.id = 1:nrow(svaba), svaba)
 message("Processing svaba barcode rescue: ", svabaVCF)
 # compute binomial test for barcode overlap and rescue
 save.image(outImage)
+#missing
+#indSnowman <- (svaba$FILTER == "PASS")
+
 fitResults <- computeBXOLbinomialTest(svaba, minBXOL=minBXOL, minSPAN=minSPAN, minSPANBX=minSPANBX,
 		se.level=se.level, loess.span=loess.span, filter.quantile=filter.quantile)
 svaba <- copy(fitResults$sv)
