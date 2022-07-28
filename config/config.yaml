@@ -11,8 +11,8 @@ tenX_funcs:  code/tenX_utils.R
 svaba_funcs:  code/svaba_utils.R
 plot_funcs:  code/plotting.R
 bxRescue_script:  code/barCodeOverlap.R
-#combineSVCN_script:  code/combineSVABAandTITAN.R
-combineSVCN_script:  code/combineSVABA-GROCSVS-TITAN.R
+combineSVCN_script:  code/combineSVABA-TITAN.R
+#combineSVCN_script:  code/combineSVABA-GROCSVS-TITAN.R
 getLRsomaticSV_script:  code/getLongRangerSomaticSV.R
 buildPoN_script:  code/buildGermlineSVPoN.R
 annotPoNSV_script:  code/annotPoNSVs.R
