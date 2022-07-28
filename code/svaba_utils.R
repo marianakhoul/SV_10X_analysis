@@ -318,10 +318,10 @@ loadVCFtoDataTableByChromosome <- function(svFiles, chrs = as.character(c(1:22, 
   }
   sv <- getSVfromCollapsedVCF(vcf, chrs = chrs, genomeStyle = genomeStyle)
   ## filter by BXOL support ##
-  #message("Filtering SVABA calls...")
-  #if (applyFilter){
-  	#sv <- filterSVABA(sv, minSPAN=minSPAN, minSPANBX=minSPANBX, minBXOL=minBXOL, maxBXOL=maxBXOL, maxBXCount=maxBXCount, dupSV.bpDiff=dupSV.bpDiff)
-  #}
+  message("Filtering SVABA calls...")
+  if (applyFilter){
+  	sv <- filterSVABA(sv, minSPAN=minSPAN, minSPANBX=minSPANBX, minBXOL=minBXOL, maxBXOL=maxBXOL, maxBXCount=maxBXCount, dupSV.bpDiff=dupSV.bpDiff)
+  }
   return(sv=sv)
 }
 
