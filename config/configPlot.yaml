@@ -21,6 +21,13 @@ filterSVs_script: code/filterToolSVs.R
 plotSVCN_script:  code/plotTitanSvaba.R
 plotCircos_script: code/create_circosPlot.R
 
+## reference files ##
+refGenome:  /mnt/storage/labs/sviswanathan/GATK_ref/cz_ref/longranger/refdata-GRCh38-2.1.0/fasta/genome.fasta
+genomeBuild:  hg38
+genomeStyle:  UCSC
+cytobandFile:  data/cytoBand_hg38.txt # only need if hg38
+chrs:  c(1:22, \"X\")
+
 ## Plotting parameters ##
 plot_id: "DTRCC6"
 plot_zoom:  FALSE
