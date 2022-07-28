@@ -1,5 +1,5 @@
-configfile: "config/config.yaml"
-configfile: "config/samples.yaml"
+configfile: "config/configPlot.yaml"
+configfile: "config/samplesPlot.yaml"
 
 import glob
 def getTITANpath(base, id, ext):
