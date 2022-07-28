@@ -80,20 +80,22 @@ for (i in 1:length(sampleList)){
 			chr=chrs, genomeStyle=genomeStyle, applyFilter = FALSE))
 	
 	sv.SVABA <- rbind(sv.SVABA, cbind(Sample = id, svSample))
-	message("HERE")
+	
 }
 save.image(outImage)
+message("HERE")
 sv.LR <- unique(sv.LR)
 #sv.SVABA <- unique(sv.SVABA)
 
 sv.LR[, Tool := "LONGRANGER"]
 sv.SVABA[, Tool := "SVABA"]
+message("HERE")
 sv <- rbind(sv.LR, sv.SVABA[SPAN >= minSVABA.span | SPAN == -1], fill=TRUE)
 sv[Tool == "SVABA", SOURCE := "SVABA"]
 cols <- c("Sample", "chromosome_1", "start_1", "chromosome_2", "start_2")
 cols.all <- c("Sample", "chromosome_1", "start_1", "chromosome_2", "start_2", "mateID", "FILTER", "Tool", "SOURCE", "DR", "SR", "AD", "PS", "SPAN", "orient_1", "orient_2")
 sv <- sv[, cols.all, with = FALSE]
-
+message("HERE")
 sv.1 <- sv[, !names(sv) %in% c("chromosome_2", "start_2"), with = FALSE]
 sv.2 <- sv[, !names(sv) %in% c("chromosome_1", "start_1"), with = FALSE]
 setnames(sv.1, c("chromosome_1", "start_1"), c("chromosome", "start"))
