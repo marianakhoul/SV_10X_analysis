@@ -507,7 +507,7 @@ segs[, TDflankInd := getTDcnFlank(segs, maxDupLength = maxDupLength)]
 save.image(outImage)
 
 ## events seen in 2 or more tools ###changed back
-consensus.sv.id <- sv[which(rowSums(!is.na(sv[, .(overlap.SVABA.id, overlap.GROCSVS.id, overlap.LONGRANGER.id)])) >=2), SV.combined.id]
+consensus.sv.id <- sv[which(rowSums(!is.na(sv[, .(overlap.SVABA.id, overlap.LONGRANGER.id)])) >=2), SV.combined.id]
 #consensus.sv.id <- sv[, SV.combined.id]
 
 ########################################################################
