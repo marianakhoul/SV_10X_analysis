@@ -137,7 +137,7 @@ svaba <- cbind(Sample = tumId, svaba)
 ############# LOAD SVABA MANUAL CURATED SV ############
 #######################################################
 # include manually curated SVs to the list
-if (!is.na(manualSVFile) | manualSVFile != "None"){
+if (!is.na(manualSVFile)){
 	message("Loading manual SV file: ", manualSVFile)
 	manualSvaba <- fread(manualSVFile)
 	manualSvaba <- manualSvaba[Sample == tumId]
