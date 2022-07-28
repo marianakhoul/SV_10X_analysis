@@ -8,7 +8,17 @@ svaba_exe:  /home/mi724/Tools/svaba/bin/svaba
 titan_results:  /home/mi724/Tools/
 
 ## path to scripts ##
+tenX_funcs:  code/tenX_utils.R
+svaba_funcs:  code/svaba_utils.R
+plot_funcs:  code/plotting.R
+bxRescue_script:  code/barCodeOverlap.R
+combineSVCN_script:  code/combineSVABA-TITAN.R
+getLRsomaticSV_script:  code/getLongRangerSomaticSV.R
+buildPoN_script:  code/buildGermlineSVPoN.R
+annotPoNSV_script:  code/annotPoNSVs.R
+filterSVs_script: code/filterToolSVs.R
 plotSVCN_script:  code/plotTitanSvaba.R
+plotCircos_script: code/create_circosPlot.R
 
 ## Plotting parameters ##
 plot_id: "DTRCC6"
