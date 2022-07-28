@@ -194,8 +194,8 @@ rule plotSvabaTitan:
 
 rule plotCircos:
 	input:
-		svabaTitanBedpe="results/combineSvabaGrocsvsTitan/{tumor}/{tumor}.svabaTitan.sv.annotPoN.bedpe",
-		svabaTitanCN="results/combineSvabaGrocsvsTitan/{tumor}/{tumor}.svabaTitan.cn.txt"
+		svabaTitanBedpe="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.annotPoN.bedpe",
+		svabaTitanCN="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.cn.txt"
 	output:
 		"results/plotCircos/{tumor}/{tumor}_Circos.pdf"
 	params:
