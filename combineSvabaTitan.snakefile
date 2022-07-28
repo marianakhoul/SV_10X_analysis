@@ -33,8 +33,8 @@ rule all:
   	expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.txt", tumor=config["pairings"]),
   	expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.cn.txt", tumor=config["pairings"]),
   	expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.bedpe", tumor=config["pairings"]),
- 	expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.annotPoN.bedpe", tumor=config["pairings"]),
-	expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.PoNToolFilter.bedpe", tumor=config["pairings"]),
+ 	#expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.annotPoN.bedpe", tumor=config["pairings"]),
+	#expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.PoNToolFilter.bedpe", tumor=config["pairings"]),
   	#expand("results/plotSvabaTitan/{tumor}/{tumor}_CNA-SV-BX_{type}_chr{chr}.{format}", tumor=config["pairings"], type=config["plot_type"], chr=CHRS, format=config["plot_format"]),
    	#expand("results/plotCircos/{tumor}/{tumor}_Circos.pdf", tumor=config["pairings"])
  		
@@ -110,9 +110,9 @@ rule combineSvabaTitan:
 		titanSegFile=lambda wildcards: getTITANpath(config["titan_results"], wildcards.tumor, ".titan.ichor.seg.noSNPs.txt"),
 		LRsvFile="results/LongRangerSomaticSV/{tumor}/{tumor}.LR.somatic.sv.txt"
 	output:
-		outputSVFile="results/combineSvabaGrocsvsTitan/{tumor}/{tumor}.svabaTitan.sv.txt",
-		outputBedpeFile="results/combineSvabaGrocsvsTitan/{tumor}/{tumor}.svabaTitan.sv.bedpe",
-		outputCNFile="results/combineSvabaGrocsvsTitan/{tumor}/{tumor}.svabaTitan.cn.txt"
+		outputSVFile="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.txt",
+		outputBedpeFile="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.bedpe",
+		outputCNFile="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.cn.txt"
 	params:
 		combineSVCNscript=config["combineSVCN_script"],
 		normID=lambda wildcards: config["pairings"][wildcards.tumor],
