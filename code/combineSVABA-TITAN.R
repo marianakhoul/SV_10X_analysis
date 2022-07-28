@@ -158,7 +158,28 @@ message("Processing svaba barcode rescue: ", svabaVCF)
 # compute binomial test for barcode overlap and rescue
 save.image(outImage)
 #missing
-#indSnowman <- (svaba$FILTER == "PASS")
+indSnowman <- (svaba$FILTER == "PASS")
+if (!is.null(svaba$BXOL)){ ## if the barcode support is present
+    indBarcode <- (svaba$SPAN >= minSPANBX | svaba$SPAN == -1) &
+        ((svaba$BXC.1 <= maxBXCount & svaba$BXC.2 <= maxBXCount) | #both less than max count
+        (svaba$BXC.1 >= maxBXCount & svaba$BXC.2 >= maxBXCount)) & #both higher than max count
+        (svaba$BXOL >= minBXOL & svaba$BXOL <= maxBXOL) 
+    svaba$support[indBarcode] <- "BX"
+}else{
+    indBarcode <- !logical(nrow(svaba))
+ }
+if (length(which(indSnowman | indBarcode)) == 0){
+    stop("No SV events SVABA pass or bxol >= ", minBXOL)
+  }
+svaba$support[indSnowman] <- "SVABA"
+svaba <- svaba[which(indSnowman | indBarcode), ] 
+  # concatenate all chromosomes
+  #vcfBX <- vcf[which(indSnowman | indBarcode)]
+  #if (j == 1){ vcfSampleBX <- vcfBX }
+  #else{ vcfSampleBX <- rbind(vcfSampleBX, vcfBX); values(vcfSampleBX) <- values(vcfSampleBX)[1:5] }
+  
+svaba <- removeDupInterChrSV(svaba)
+svaba <- removeDupNonPassSV(svaba, bp.diff = dupSV.bpDiff)
 
 fitResults <- computeBXOLbinomialTest(svaba, minBXOL=minBXOL, minSPAN=minSPAN, minSPANBX=minSPANBX,
 		se.level=se.level, loess.span=loess.span, filter.quantile=filter.quantile)
