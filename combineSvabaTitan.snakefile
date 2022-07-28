@@ -34,7 +34,7 @@ rule all:
   	expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.cn.txt", tumor=config["pairings"]),
   	expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.bedpe", tumor=config["pairings"]),
  	expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.annotPoN.bedpe", tumor=config["pairings"]),
-	#expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.PoNToolFilter.bedpe", tumor=config["pairings"]),
+	expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.PoNToolFilter.bedpe", tumor=config["pairings"]),
   	#expand("results/plotSvabaTitan/{tumor}/{tumor}_CNA-SV-BX_{type}_chr{chr}.{format}", tumor=config["pairings"], type=config["plot_type"], chr=CHRS, format=config["plot_format"]),
    	#expand("results/plotCircos/{tumor}/{tumor}_Circos.pdf", tumor=config["pairings"])
  		
@@ -145,3 +145,19 @@ rule annotatePoNSV:
 		"logs/combineSvabaTitan/{tumor}.annotPoNSV.log"
 	shell:
 		"Rscript {params.annotScript} --id {wildcards.tumor} --svaba_funcs {params.svabafuncs} --svFile {input.svFile} --PoNFile {input.PoNFile} --blackListFile {input.blackListFile} --outputSVAnnotFile {output.outputSVAnnotFile} 2> {log} > {log}"
+
+rule filterSVs:
+	input:
+		svFile="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.annotPoN.bedpe"
+	output:
+		outputSVFiltFile="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.PoNToolFilter.bedpe",
+		outputSummaryFile="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.PoNToolFilter.summary.txt"
+	params:
+		filterScript=config["filterSVs_script"],
+		minFreqPoNSVBkptOverlap=config["PoN_minFreqSVbkpts"],
+		# minFreqPoNCNVBkptOverlap=config["PoN_minFreqCNV"],
+		minFreqPoNBlackList=config["PoN_minFreqBlackList"]
+	log:
+		"logs/combineSvabaTitan/{tumor}.filterSVs.log"
+	shell:
+		"Rscript {params.filterScript} --id {wildcards.tumor} --svFile {input.svFile} --minFreqPoNSVBkptOverlap {params.minFreqPoNSVBkptOverlap} --minFreqPoNBlackList {params.minFreqPoNBlackList} --outputSVFile {output.outputSVFiltFile} --outputSummary {output.outputSummaryFile} 2> {log} > {log}"
