@@ -130,3 +130,35 @@ rule combineSvabaTitan:
 		"logs/combineSvabaGrocsvsTitan/{tumor}.log"
 	shell:
 		"Rscript {params.combineSVCNscript} --tumID {wildcards.tumor} --normID {params.normID} --tenX_funcs {params.tenXfuncs} --svaba_funcs {params.svabafuncs} --svabaVCF {input.svabaVCF} --manualSVFile {params.manualSVfile} --titanBinFile {input.titanBinFile} --titanSegFile {input.titanSegFile} --LRsummaryFile {input.LRsummaryFile} --LRsvFile {input.LRsvFile} --grocsvsFile {input.grocFile} --genomeBuild {params.genomeBuild} --genomeStyle {params.genomeStyle} --chrs \"{params.chrs}\" --outDir results/combineSvabaGrocsvsTitan/{wildcards.tumor}/ --outputSVFile {output.outputSVFile} --outputCNFile {output.outputCNFile} --outputBedpeFile {output.outputBedpeFile} > {log} 2> {log}"
+rule annotatePoNSV:
+	input:
+		svFile="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.txt",
+		PoNFile="results/panelOfNormalsSV/PanelOfNormalsSV.txt",
+		blackListFile="results/panelOfNormalsSV/PoNBlacklistBins.txt"
+	output:
+		outputSVAnnotFile="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.annotPoN.bedpe",
+	params:
+		annotScript=config["annotPoNSV_script"],
+		svabafuncs=config["svaba_funcs"],
+	log:
+		"logs/combineSvabaTitan/{tumor}.annotPoNSV.log"
+	shell:
+		"Rscript {params.annotScript} --id {wildcards.tumor} --svaba_funcs {params.svabafuncs} --svFile {input.svFile} --PoNFile {input.PoNFile} --blackListFile {input.blackListFile} --outputSVAnnotFile {output.outputSVAnnotFile} 2> {log} > {log}"
+
+rule filterSVs:
+	input:
+		svFile="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.annotPoN.bedpe"
+	output:
+		outputSVFiltFile="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.PoNToolFilter.bedpe",
+		outputSummaryFile="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.PoNToolFilter.summary.txt"
+	params:
+		filterScript=config["filterSVs_script"],
+		minFreqPoNSVBkptOverlap=config["PoN_minFreqSVbkpts"],
+		# minFreqPoNCNVBkptOverlap=config["PoN_minFreqCNV"],
+		minFreqPoNBlackList=config["PoN_minFreqBlackList"]
+	log:
+		"logs/combineSvabaTitan/{tumor}.filterSVs.log"
+	shell:
+		"Rscript {params.filterScript} --id {wildcards.tumor} --svFile {input.svFile} --minFreqPoNSVBkptOverlap {params.minFreqPoNSVBkptOverlap} --minFreqPoNBlackList {params.minFreqPoNBlackList} --outputSVFile {output.outputSVFiltFile} --outputSummary {output.outputSummaryFile} 2> {log} > {log}"
+
+
