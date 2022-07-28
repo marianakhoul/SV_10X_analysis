@@ -1,1 +1,20 @@
+## path to tools ##
 
+samTools:  /mnt/storage/apps/samtools/1.9/bin/samtools
+bcfTools:  /mnt/storage/apps/bcftools/1.9/bin/bcftools
+svaba_exe:  /home/mi724/Tools/svaba/bin/svaba
+
+## path to scripts ##
+plotSVCN_script:  code/plotTitanSvaba.R
+
+## Plotting parameters ##
+plot_id: "DTRCC6_chr1_9_17"
+plot_zoom:  FALSE
+plot_chrs:  c(1,9,17) # "None" will also plot all chromosomes
+plot_startPos:  None
+plot_endPos:  None
+plot_geneFile:  data/gene_list_72.txt ## include list of genes to annotate on plot
+plot_ylim:  c(-2,6)
+plot_size:  c(8,4)
+plot_type:  titan ## titan - will include haplotype fraction
+plot_format:  png
