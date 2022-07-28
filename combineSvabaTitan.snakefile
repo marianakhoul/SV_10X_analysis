@@ -127,7 +127,7 @@ rule combineSvabaTitan:
 		windowSize=config["bxRescue_windowSize"],
 		minRead=config["bxRescue_minReadOverlapSupport"]	
 	log:
-		"logs/combineSvabaGrocsvsTitan/{tumor}.log"
+		"logs/combineSvabaTitan/{tumor}.log"
 	shell:
 		"Rscript {params.combineSVCNscript} --tumID {wildcards.tumor} --normID {params.normID} --tenX_funcs {params.tenXfuncs} --svaba_funcs {params.svabafuncs} --svabaVCF {input.svabaVCF} --titanBinFile {input.titanBinFile} --titanSegFile {input.titanSegFile} --LRsummaryFile {input.LRsummaryFile} --LRsvFile {input.LRsvFile} --genomeBuild {params.genomeBuild} --genomeStyle {params.genomeStyle} --chrs \"{params.chrs}\" --outDir results/combineSvabaGrocsvsTitan/{wildcards.tumor}/ --outputSVFile {output.outputSVFile} --outputCNFile {output.outputCNFile} --outputBedpeFile {output.outputBedpeFile} > {log} 2> {log}"
 
