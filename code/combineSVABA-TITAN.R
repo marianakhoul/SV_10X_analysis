@@ -156,6 +156,7 @@ svaba <- cbind(SV.id = 1:nrow(svaba), svaba)
 
 message("Processing svaba barcode rescue: ", svabaVCF)
 # compute binomial test for barcode overlap and rescue
+save.image(outImage)
 fitResults <- computeBXOLbinomialTest(svaba, minBXOL=minBXOL, minSPAN=minSPAN, minSPANBX=minSPANBX,
 		se.level=se.level, loess.span=loess.span, filter.quantile=filter.quantile)
 svaba <- copy(fitResults$sv)
