@@ -23,6 +23,7 @@ def getTITANpath(base, id, ext):
 CHRS = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,'X']
 
 
+
 rule all:
   input: 
   	expand("results/LongRangerSomaticSV/{tumor}/{tumor}.LR.somatic.sv.txt", tumor=config["pairings"]),
