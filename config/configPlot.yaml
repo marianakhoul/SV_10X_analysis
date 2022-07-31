@@ -9,7 +9,7 @@ titan_libdir:  /home/mi724/Tools/TitanCNA/
 titan_results:  /home/mi724/Tools/
 
 ## path to scripts ##
-tenX_funcs:  code/tenX_utils.R
+tenX_funcs:  code/tenX_utilsModi.R
 svaba_funcs:  code/svaba_utils.R
 plot_funcs:  code/plottingModi.R
 bxRescue_script:  code/barCodeOverlap.R
