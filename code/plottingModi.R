@@ -12,7 +12,7 @@ plotRearrangementArcs <- function (sv, cn, ploidy = NULL, interchr=TRUE, xlim=NU
 	
 	# adjust for ploidy #
 	if (!is.null(ploidy)){
-    cn[, "LogRatio"] <- as.numeric(cn[, "LogRatio"]) + log2(ploidy / 2)
+    cn[, "LogRatio"] <- as.numeric(cn[, "LogRatio"]) + (ploidy / 2)
   }
 	
   if (!is.null(chr) && nrow(sv) > 0){
