@@ -369,7 +369,7 @@ plotIchorCNA <- function(dataIn, param = NULL, colName = "copy", segs=NULL, chr=
       	cnLog <- log2(cn[-which(cn==3)] / normCN)  
         cn <- seq(-2,yrange[2],2)#c(-2, cn)
         y.ticks <- cn
-        ylab <- "Copy Number (log2 ratio)"
+        ylab <- "Copy Number"
         centreLine <- 0
       }
       
