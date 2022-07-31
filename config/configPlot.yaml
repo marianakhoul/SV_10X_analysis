@@ -18,7 +18,7 @@ getLRsomaticSV_script:  code/getLongRangerSomaticSV.R
 buildPoN_script:  code/buildGermlineSVPoN.R
 annotPoNSV_script:  code/annotPoNSVs.R
 filterSVs_script: code/filterToolSVs.R
-plotSVCN_script:  code/plotTitanSvaba.R
+plotSVCN_script:  code/plotTitanSvabaModi.R
 plotCircos_script: code/create_circosPlot.R
 
 ## reference files ##
