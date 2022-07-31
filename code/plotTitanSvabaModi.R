@@ -54,7 +54,6 @@ library(VariantAnnotation)
 library(BSgenome.Hsapiens.UCSC.hg38)
 setDTthreads(1)
 source(paste0(opt$titan_libdir, "/R/haplotype.R"))
-#source(opt$tenX_funcs)
 source(opt$svaba_funcs)
 source(opt$plot_funcs)
 
@@ -76,8 +75,6 @@ cytobandFile <- opt$cytobandFile
 altSVFile <- opt$customSVFile
 plotType <- opt$plotCNAtype
 plotSize <- eval(parse(text=opt$plotSize))
-#plotFormat <- opt$plotFormat
-#outDir <- opt$outDir
 outPlotFile <- opt$outPlotFile
 plotFormat <- tools::file_ext(outPlotFile)
 width <- plotSize[1]  #6 8 
@@ -169,31 +166,24 @@ if (genomeBuild == "hg38" && file.exists(cytobandFile)){
   names(cytoband) <- c("chrom", "start", "end", "name", "gieStain")
 }
 
-#outPlotDir <- outDir
-#dir.create(outPlotDir)
-#outImage <- paste0(outDir, "/", id, ".RData")
 outImage <- gsub(plotFormat, "RData", outPlotFile)
-#save.image(file=outImage)
 
 message("Analyzing ", id)
 ulp <- fread(cnFile)
 segs <- fread(segFile)
-#segs$median <- segs$seg.mean
-#segs$chr <- segs$chrom
-#segs$state <- segs$state.num
 params <- read.delim(grep(id, paramFile, value=T), header=F, as.is=T, nrow=2)
 purity <- 1 - as.numeric(params[1, 2]) # TITAN normal contamination
 ploidyT <- as.numeric(params[2, 2])
 normCN <- 2
 ploidyS <- purity * ploidyT + (1-purity) * normCN
 if (yaxis == "integer"){
-	ulp[!grepl("X",Chr), LogRatio := log2(logRbasedCN(LogRatio, purity, ploidyT, cn=2))]
-	ulp[grepl("X",Chr), LogRatio := log2(logRbasedCN(LogRatio, purity, ploidyT, cn=1))]
+	ulp[!grepl("X",Chr), LogRatio := logRbasedCN(LogRatio, purity, ploidyT, cn=2)]#log2(logRbasedCN(LogRatio, purity, ploidyT, cn=2))]
+	ulp[grepl("X",Chr), LogRatio := logRbasedCN(LogRatio, purity, ploidyT, cn=1)]#log2(logRbasedCN(LogRatio, purity, ploidyT, cn=1))]
 	colName <- "logR_Copy_Number"
 }else{
-	ulp[, LogRatio := LogRatio + log2(ploidyS / 2)]
+	ulp[, LogRatio := LogRatio + ploidyS / 2]#log2(ploidyS / 2)]
 	segs$LogRatio <- segs$Median_logR
-	segs$LogRatio <- segs$LogRatio + log2(ploidyS / 2)
+	segs$LogRatio <- segs$LogRatio + ploidyS / 2#log2(ploidyS / 2)
 	colName <- "LogRatio"
 }
 # exclude data points not analyzed by titan
@@ -228,161 +218,4 @@ sv[is.na(CN_overlap_type), SV.class := "Unbalanced"]
 sv[, color := svCol[SV.class]]
 #save.image(file=outImage)
 
-#####################################
-########## PLOT CHR RESULTS #########
-#####################################	 
-for (j in 1:length(chrStr)){
-  message("Plotting ", chrStr[j])
-  ###################################
-  ### SNOWMAN + BARCODE RESCUE ######
-  if (genomeStyle == "NCBI"){
-  	chrTitle <- paste0("chr", chrStr[j])
-  }else{
-  	chrTitle <- chrStr[j]
-  }
-  
-  #outPlot <- paste0(outPlotDir, "/", id, "_CNA-SV-BX_",plotType,"_",chrTitle,".",plotFormat)
-  plotTitle <- paste0(id, " (", chrTitle,")")
-  if (zoom){
-    ylimMax <- ulp[Chr==chrStr[j] & Start >= xlim[1] & Start <= xlim[2], max(get(colName), na.rm=T)] + 1
-    #outPlot <- paste0(outPlotDir, "/", id, "_CNA-SV-BX_",plotType,"_",chrTitle,"-",startTitle,"-",endTitle,".",plotFormat)
-    plotTitle <- paste0(id, " (",chrTitle,":",startTitle,"-",endTitle, ")")
-  }else{
-    xlim <- c(1, seqlengths(seqinfo)[chrStr[j]])
-    ylimMax <- ulp[, max(get(colName), na.rm=T)] + 1
-  }    
-  ylim[2] <- min(max(ylim[2], ceiling(ylimMax)), 10)
-  ylimSV <- ylim
-  ylimSV[2] <- ylimSV[2] - 0.5
-  
-  if (plotFormat == "png"){
-  	png(outPlotFile, width = width*100, height=height*100)
-  }else{
-  	pdf(outPlotFile, width = width, height=height)
-	}
-  if (plotHaplotypeFrac){ 
-    par(mfrow=c(2,1)); spacing <- 0  
-  }else{
-    spacing <- 6
-  }	
-  if (plotSegs) { segsToPlot <- segs } else { segsToPlot <- NULL}
-  
-  if (grepl("X", chrStr[j])) { cnCol <- rep("#000000", 30) }
-  message("Plotting read depth CN")
-  plotTitanIchorCNA(ulp, segs=segsToPlot, chr=chrStr[j], colName=colName, 
-      cytoBand=FALSE, geneAnnot=genes, purity = purity, ploidyT = NULL, yaxis=yaxis, cnCol = cnCol,
-      yrange=ylim, xlim=xlim, spacing=spacing, xaxt=xaxt, cex = cex, gene.cex = 1,
-      plot.title = plotTitle)
 
-  if (nrow(sv) > 0){
-      centreLine <- 0
-    
-    if (yaxis == "integer"){
-   		normCN <- ifelse(grepl("X", chrStr[j]), 1, 2) 
-    	ylimMax.int <- ulp[Chr == chrStr[j], max(get(colName), na.rm=T)] * 0.75
-    	ylimSV[2] <- min(ylimMax.int, 10)
-    	ylimSV[1] <- 2
-    	centreLine <- ifelse(grepl("X", chrStr[j]), 0, 1)
-    	ploidyS <- NULL
-    }
-    #arcHeight <- ylim[2]# - ylim[1])/4
-    
-    if (!is.null(altSVFile) && altSVFile != "None"){
-			altSV.sample <- altSV[Sample == id]
-			message("Plotting custom")
-			plotRearrangementArcs(altSV.sample, cn=as.data.frame(ulp), chr=chrStr[j], 
-										interchr = interchr, plotAtCentre = plotAtCentre,
-										xlim=xlim, arcHeight=ylimSV, ploidy = NULL, lty = 1, offset.factor=offset.factor,
-										centreLine=centreLine, buffer=buffer, lcol=manualCol, arr.col=manualCol, 
-										endhead = plotArrows, arr.pos = 1.0, minSPAN = 0)
-  	}	
-
-    ## plot LongRanger arcs ##
-    message("Plotting longranger")
-    plotRearrangementArcs(sv[Tool=="LONGRANGER"], cn=as.data.frame(ulp), chr=chrStr[j], 
-                  interchr = interchr, plotAtCentre = plotAtCentre,
-                  xlim=xlim, arcHeight=ylimSV, ploidy = NULL, lty = 1, offset.factor=offset.factor,
-                  centreLine=centreLine, buffer=buffer, svTypeCol=!is.null(svCol), 
-                  lcol=lrCol, arr.col=lrCol, lwd = 2,
-                  endhead = plotArrows, arr.pos = 1.0, minSPAN = 0)
-    ## plot BX Rescue arcs ##
-    message("Plotting CN rescue")
-    plotRearrangementArcs(sv[Tool=="SVABA" & support %in% c("RESCUE,CN2","RESCUE,CN2") &
-                          CN_overlap_type != "Unknown-ShortSVwithCN"], 
-    							cn=as.data.frame(ulp), 
-    							chr=chrStr[j], interchr = interchr, plotAtCentre = plotAtCentre,
-                  xlim=xlim, arcHeight=ylimSV, ploidy = NULL, lty = 1, offset.factor=offset.factor,
-                  centreLine=centreLine, buffer=buffer, svTypeCol=!is.null(svCol),
-                  lcol=rescueCol, arr.col=rescueCol, lwd = 2,
-                  endhead = plotArrows, arr.pos = 1.0, minSPAN = 0)
-    # message("Plotting CN rescue - short SVs")
-    # plotRearrangementArcs(sv[Tool=="SVABA" & support %in% c("BX,CN1","BX,CN2","SVABA,CN1","SVABA,CN2") &
-    #                       CN_overlap_type == "Unknown-ShortSVwithCN"], 
-    #               cn=as.data.frame(ulp), 
-    #               chr=chrStr[j], interchr = interchr, plotAtCentre = plotAtCentre,
-    #               xlim=xlim, arcHeight=ylimSV, ploidy = NULL, lty = 1, offset.factor=offset.factor,
-    #               centreLine=centreLine, buffer=buffer, lcol=rescueCol, arr.col=rescueCol, 
-    #               endhead = plotArrows, arr.pos = 1.0, minSPAN = 0)
-    message("Plotting BX rescue")
-    plotRearrangementArcs(sv[Tool=="SVABA" & (support %in% c("BX,CN1","BX,CN2","BX"))], 
-    							cn=as.data.frame(ulp), 
-    							chr=chrStr[j], interchr = interchr, plotAtCentre = plotAtCentre,
-                  xlim=xlim, arcHeight=ylimSV, ploidy = NULL, lty = 1, offset.factor=offset.factor,
-                  centreLine=centreLine, buffer=buffer, svTypeCol=!is.null(svCol), 
-                  lcol=rescueCol, arr.col=rescueCol, lwd = 2,
-                  endhead = plotArrows, arr.pos = 1.0, minSPAN = 0)
-    message("Plotting manual SVs")
-    plotRearrangementArcs(sv[Tool=="SVABA" & (support %in% c("MANUAL","MANUAL,CN1","MANUAL,CN2"))], 
-                  cn=as.data.frame(ulp), 
-                  chr=chrStr[j], interchr = interchr, plotAtCentre = plotAtCentre,
-                  xlim=xlim, arcHeight=ylimSV, ploidy = NULL, lty = 1, offset.factor=offset.factor,
-                  centreLine=centreLine, buffer=buffer, svTypeCol=!is.null(svCol),
-                  lcol=manualCol, arr.col=manualCol, lwd = 2,
-                  endhead = plotArrows, arr.pos = 1.0, minSPAN = 0)
-    ## plot SVABA arcs ##
-    message("Plotting svaba")
-    plotRearrangementArcs(sv[Tool=="SVABA" & support %in% c("SVABA","SVABA,CN1","SVABA,CN2")], cn=as.data.frame(ulp), 
-    							chr=chrStr[j], interchr = interchr, plotAtCentre = plotAtCentre,
-                  xlim=xlim, arcHeight=ylimSV, ploidy = NULL, lty = 1, offset.factor=offset.factor,
-                  centreLine=centreLine, buffer=buffer, svTypeCol=!is.null(svCol),
-                  lcol=svabaCol, arr.col=svabaCol, lwd = 2,
-                  endhead = plotArrows, arr.pos = 1.0, minSPAN = 0)
-    ## plot GROCSVS arcs ##
-    #message("Plotting grocsvs")
-    #plotRearrangementArcs(sv[Tool=="GROCSVS"], cn=as.data.frame(ulp), chr=chrStr[j], 
-                  interchr = interchr, plotAtCentre = plotAtCentre,
-                  xlim=xlim, arcHeight=ylimSV, ploidy = NULL, lty = 1, offset.factor=offset.factor,
-                  centreLine=centreLine, buffer=buffer, svTypeCol=!is.null(svCol),
-                  lcol=grocCol, arr.col=grocCol, lwd = 2,
-                  endhead = plotArrows, arr.pos = 1.0, minSPAN = 0)
-  }
-  
-  if (plotHaplotypeFrac){
-    message("Plotting haplotype fraction")
-    plotHaplotypeFraction(ulp[,-1], chrStr[j], resultType = "HaplotypeRatio", colType = "Haplotypes", 
-	  xlab="", ylim=c(0,1), xlim=xlim, cex=cex.hap, cex.axis=1.5, cex.lab=1.5, spacing = 6)
-	
-	par(xpd=NA)
-    
-    if (genomeBuild == "hg38" && file.exists(cytobandFile)){
-      sl <- seqlengths(seqinfo[chrStr[j]])
-      pI <- plotIdiogram.hg38(chrStr[j], cytoband=cytoband, seqinfo=seqinfo, xlim=c(0, max(sl)), unit="bp", label.y=-0.425, new=FALSE, ylim=c(-0.3,-0.15))	
-    }else{
-      pI <- plotIdiogram(chrStr[j], build="hg19", unit="bp", label.y=-0.6, new=FALSE, ylim=c(-0.3,-0.15))
-    }
-  }else{ # not plotting haplotype fraction
-    if (!zoom){
-      par(xpd=NA)
-      if (genomeBuild == "hg38" && file.exists(cytobandFile)){
-        sl <- seqlengths(seqinfo[chrStr[j]])
-        pI <- plotIdiogram.hg38(chrStr[j], cytoband=cytoband, seqinfo=seqinfo, unit="bp", label.y=ylim[1]-(ylim[2]-ylim[1])*0.275, new=FALSE, ylim=c(ylim[1]-(ylim[2]-ylim[1])*0.15,ylim[1]-(ylim[2]-ylim[1])*0.075))
-      }else{
-        pI <- plotIdiogram(chrStr[j], build="hg19", unit="bp", label.y=ylim[1]-(ylim[2]-ylim[1])*0.275, new=FALSE, ylim=c(ylim[1]-(ylim[2]-ylim[1])*0.15,ylim[1]-(ylim[2]-ylim[1])*0.075))
-      }
-    }
-  }
-
-  
-  dev.off()
-		
-}
