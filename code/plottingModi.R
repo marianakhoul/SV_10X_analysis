@@ -152,10 +152,10 @@ plotTitanIchorCNA <- function(dataIn, param = NULL, colName = "LogRatio", callCo
   normCN <- 2
   if (!is.null(ploidyT) & yaxis != "integer"){
     ploidyS <- purity * ploidyT + (1-purity) * normCN
-    dataIn[, colName] <- as.numeric(dataIn[, colName]) + log2(ploidyS / 2)
+    dataIn[, colName] <- as.numeric(dataIn[, colName]) + (ploidyS / 2)
     
     if (!is.null(segs)){
-      segs[, colName] <- segs[, colName] + log2(ploidyS / 2)
+      segs[, colName] <- segs[, colName] + (ploidyS / 2)
     }
   }
   
@@ -175,22 +175,22 @@ plotTitanIchorCNA <- function(dataIn, param = NULL, colName = "LogRatio", callCo
         cn <- c(0, 1, 2, 4, `^`(2, 3:(yrange[2]+1)))
       }      
       if (yaxis == "integer"){
-        y.ticks <- log2(cn)
-        y.ticks[1] <- log2(zero)  
+        y.ticks <- cn
+        y.ticks[1] <- zero 
         yrange[1] <- y.ticks[1]    
         ylab <- "Copy Number"
         #dataByChr[, colName] <- log2(logRbasedCN(dataByChr[, colName], purity, ploidyT, cn=normCN))
-        dataByChr[, eval(colName)] <- log2(dataByChr[, get(colName)])
+        dataByChr[, eval(colName)] <- dataByChr[, get(colName)]
         if (!is.null(segs)){
-      		segs[, get(colName)] <- log2(segs[, get(colName)])# + log2(ploidyS / 2)
+      		segs[, get(colName)] <- segs[, get(colName)]# + log2(ploidyS / 2)
     	}
-        centreLine <- log2(normCN)
+        centreLine <- normCN
       }else{      
       	#dataByChr[, colName] <- dataByChr[, colName] + log2(ploidyS / 2)
       	cnLog <- log2(cn[-which(cn==3)] / normCN)  
         cn <- seq(-2,yrange[2],2)#c(-2, cn)
         y.ticks <- cn
-        ylab <- "Copy Number (log2 ratio)"
+        ylab <- "Copy Number"
         centreLine <- 0
       }
 
