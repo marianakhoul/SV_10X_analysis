@@ -357,15 +357,15 @@ plotHaplotypeFraction <- function(dataIn, chr = NULL, type = "HaplotypeRatio", g
         
         # plot for all chromosomes
         coord <- getGenomeWidePositions(dataIn[, Chr], dataIn[, Position])
-        if (type == "HaplotypeRatio"){
-          plot(coord$posns, as.numeric(dataIn[, HaplotypeRatio.1]), 
-            col = colors.1, pch = 16, 
-            xaxt = "n", bty = "n", las = 1, ylab = "Haplotype Fraction", ...)
-          points(coord$posns, dataIn[, HaplotypeRatio.2], col = colors.1, pch=16, ...)
-        }else if (type == "AllelicRatio"){
-          plot(coord$posns, as.numeric(dataIn[, AllelicRatio]), 
-            col = colors.2, pch = 16, 
-            xaxt = "n", bty = "n", las = 1, ylab = "Allelic Fraction", ...)
+        #if (type == "HaplotypeRatio"){
+        #  plot(coord$posns, as.numeric(dataIn[, HaplotypeRatio.1]), 
+        #    col = colors.1, pch = 16, 
+        #    xaxt = "n", bty = "n", las = 1, ylab = "Haplotype Fraction", ...)
+        #  points(coord$posns, dataIn[, HaplotypeRatio.2], col = colors.1, pch=16, ...)
+        #}else if (type == "AllelicRatio"){
+        #  plot(coord$posns, as.numeric(dataIn[, AllelicRatio]), 
+        #    col = colors.2, pch = 16, 
+        #    xaxt = "n", bty = "n", las = 1, ylab = "Allelic Fraction", ...)
         }else{
               stop("Need to specify \"type\": HaplotypeRatio or AllelicRatio")
         }
