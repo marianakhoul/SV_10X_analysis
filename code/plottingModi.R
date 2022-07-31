@@ -434,7 +434,7 @@ plotIchorCNA <- function(dataIn, param = NULL, colName = "copy", segs=NULL, chr=
       if (cytoBand==TRUE){
         require(quantsmooth)
         par(xpd = NA)
-        #paintCytobands(chrom=chr, units="bases", pos=c(0,(yrange[1]-0.5)), width=0.75, legend=F)	
+        paintCytobands(chrom=chr, units="bases", pos=c(0,(yrange[1]-0.5)), width=0.75, legend=F)	
       }
       
       if (!is.null(geneAnnot)){
