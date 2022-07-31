@@ -32,8 +32,8 @@ chrs:  c(1:22, \"X\")
 plot_id: "DTRCC6"
 plot_zoom:  FALSE
 plot_chrs:  None # "None" will also plot all chromosomes
-plot_startPos:  None
-plot_endPos:  None
+plot_startPos:  40000000
+plot_endPos:  72000000
 plot_geneFile:  data/gene_list_72.txt ## include list of genes to annotate on plot
 plot_ylim:  c(-2,6)
 plot_size:  c(8,4)
