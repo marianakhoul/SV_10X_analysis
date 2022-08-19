@@ -346,7 +346,7 @@ for (j in 1:length(chrStr)){
                   #lcol=grocCol, arr.col=grocCol, lwd = 2,
                   #endhead = plotArrows, arr.pos = 1.0, minSPAN = 0)
   }
-  
+  zoom <- FALSE
   if (plotHaplotypeFrac){
     message("Plotting haplotype fraction")
     plotHaplotypeFraction(ulp[,-1], chrStr[j], resultType = "HaplotypeRatio", colType = "Haplotypes", 
