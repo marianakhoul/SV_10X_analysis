@@ -30,7 +30,7 @@ chrs:  c(1:22, \"X\")
 
 ## Plotting parameters ##
 plot_id: "DTRCC6"
-plot_zoom:  FALSE #TRUE
+plot_zoom:  TRUE
 plot_chrs:  None # "None" will also plot all chromosomes
 plot_startPos:  40000000
 plot_endPos:  72000000
