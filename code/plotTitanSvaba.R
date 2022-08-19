@@ -121,7 +121,7 @@ if (zoom){
   plotAtCentre <- FALSE
   cnColor <- FALSE
   plotIdio <- TRUE
-  exclude.na.snp <- FALSE
+  exclude.na.snp <- TRUE
 }else{
   xlim <- NULL
   cex <- 0.25
