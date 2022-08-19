@@ -178,7 +178,7 @@ plotTitanIchorCNA <- function(dataIn, param = NULL, colName = "LogRatio", callCo
         y.ticks <- cn
         y.ticks[1] <- zero 
         yrange[1] <- y.ticks[1]    
-        ylab <- "Copy Number"
+        ylab <- "Copy Number \n (log2 ratio)"
         #dataByChr[, colName] <- log2(logRbasedCN(dataByChr[, colName], purity, ploidyT, cn=normCN))
         dataByChr[, eval(colName)] <- dataByChr[, get(colName)]
         if (!is.null(segs)){
@@ -190,7 +190,7 @@ plotTitanIchorCNA <- function(dataIn, param = NULL, colName = "LogRatio", callCo
       	cnLog <- log2(cn[-which(cn==3)] / normCN)  
         cn <- seq(-2,yrange[2],2)#c(-2, cn)
         y.ticks <- cn
-        ylab <- "Copy Number"
+        ylab <- "Copy Number \n (log2 ratio)"
         centreLine <- 0
       }
 
@@ -357,7 +357,7 @@ plotIchorCNA <- function(dataIn, param = NULL, colName = "copy", segs=NULL, chr=
         y.ticks <- log2(cn)
         y.ticks[1] <- log2(zero)  
         yrange[1] <- y.ticks[1]    
-        ylab <- "Copy Number"
+        ylab <- "Copy Number \n (log2 ratio)"
         #dataByChr[, colName] <- log2(logRbasedCN(dataByChr[, colName], purity, ploidyT, cn=normCN))
         dataByChr[, colName] <- log2(dataByChr[, colName])
         if (!is.null(segs)){
@@ -369,7 +369,7 @@ plotIchorCNA <- function(dataIn, param = NULL, colName = "copy", segs=NULL, chr=
       	cnLog <- log2(cn[-which(cn==3)] / normCN)  
         cn <- seq(-2,yrange[2],2)#c(-2, cn)
         y.ticks <- cn
-        ylab <- "Copy Number"
+        ylab <- "Copy Number \n (log2 ratio)"
         centreLine <- 0
       }
       
@@ -461,7 +461,7 @@ plotIchorCNA <- function(dataIn, param = NULL, colName = "copy", segs=NULL, chr=
     plot(coord$posns,as.numeric(dataIn[, colName]),
          col=cnCol[as.character(dataIn[,"event"])],pch=16,xaxt="n", ylim=yrange,
          xlim=c(1,as.numeric(coord$posns[length(coord$posns)])),
-         xlab="",ylab="Copy Number (log2 ratio)",
+         xlab="",ylab="Copy Number \n (log2 ratio)",
          cex.lab=1.5,cex.axis=1.5,cex=0.5,las=1,bty="n",
          #main=dataIn[1,"sample"])
          main=main)
@@ -535,13 +535,13 @@ plotCNlogRByChr <- function(dataIn, colName = "copy", segs=NULL, chr=NULL, ploid
 		if (yaxis == "integer"){
 			y.ticks <- log2(cn / normCN)
 			y.ticks[1] <- -2
-			ylab <- "Copy Number"
+			ylab <- "Copy Number \n (log2 ratio)"
 		}else{
 		  cn <- log2(cn[-which(cn==3)] / normCN)
 		  cn[1] <- -2
 			y.ticks <- cn
 			cn <- format(cn, digits=2) 
-			ylab <- "Copy Number (log2 ratio)"
+			ylab <- "Copy Number \n (log2 ratio)"
 		}
 		if (is.null(plot.title)){
 			plot.title <- paste("Chromosome ",i,sep="")
@@ -592,7 +592,7 @@ plotCNlogRByChr <- function(dataIn, colName = "copy", segs=NULL, chr=NULL, ploid
     	plot(coord$posns,as.numeric(dataIn[,colName]),
     			col=cnCol[as.numeric(dataIn[,"state"])],pch=19,xaxt="n", ylim=yrange,
     			xlim=c(1,as.numeric(coord$posns[length(coord$posns)])),
-    			xlab="",ylab="Copy Number (log2 ratio)",
+    			xlab="",ylab="Copy Number \n (log2 ratio)",
     			cex.lab=1.5,cex.axis=1.5,cex=0.5,las=1,bty="n",
     			main=dataIn[1,"sample"])
     	#plot segments
