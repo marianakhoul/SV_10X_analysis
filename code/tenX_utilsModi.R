@@ -328,7 +328,7 @@ plotHaplotypeFraction <- function(dataIn, chr = NULL, type = "HaplotypeRatio", g
             #if (type == "HaplotypeRatio"){
             #  plot(dataByChr[, Position], dataByChr[, HaplotypeRatio.1], 
             #      col = colors.1, 
-            #      pch = 16, xaxt = "n", las = 1, ylab = "Haplotype Fraction", xlim = xlim, 
+            #      pch = 16, xaxt = "n", las = 1, ylab = "Haplotype \n Fraction", xlim = xlim, 
             #      ...)
             #  points(dataByChr[, Position], dataByChr[, HaplotypeRatio.2], col = colors.2, pch=16, ...)
             #}else if (type == "AllelicRatio"){
@@ -360,7 +360,7 @@ plotHaplotypeFraction <- function(dataIn, chr = NULL, type = "HaplotypeRatio", g
         #if (type == "HaplotypeRatio"){
         #  plot(coord$posns, as.numeric(dataIn[, HaplotypeRatio.1]), 
         #    col = colors.1, pch = 16, 
-        #    xaxt = "n", bty = "n", las = 1, ylab = "Haplotype Fraction", ...)
+        #    xaxt = "n", bty = "n", las = 1, ylab = "Haplotype \n Fraction", ...)
         #  points(coord$posns, dataIn[, HaplotypeRatio.2], col = colors.1, pch=16, ...)
         #}else if (type == "AllelicRatio"){
         #  plot(coord$posns, as.numeric(dataIn[, AllelicRatio]), 
