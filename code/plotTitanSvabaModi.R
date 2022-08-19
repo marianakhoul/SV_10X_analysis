@@ -248,7 +248,7 @@ for (j in 1:length(chrStr)){
   if (plotFormat == "png"){
   	png(outPlotFile, width = width*100, height=height*100)
   }else{
-  	pdf(outPlotFile, width = width, height=height)
+  	pdf(outPlotFile, width = 10, height=6)
 	}
   if (plotHaplotypeFrac){ 
     par(mfrow=c(2,1)); spacing <- 0  
