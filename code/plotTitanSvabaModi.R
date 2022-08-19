@@ -138,7 +138,7 @@ seqlevelsStyle(chrStr) <- genomeStyle
 
 if (plotType == "titan"){
 	cnColor <- TRUE
-	plotHaplotypeFrac <- TRUE
+	plotHaplotypeFrac <- FALSE
 	height <- height * 1.5
 	cex.hap <- 0.5
 }
@@ -177,13 +177,13 @@ ploidyT <- as.numeric(params[2, 2])
 normCN <- 2
 ploidyS <- purity * ploidyT + (1-purity) * normCN
 if (yaxis == "integer"){
-	ulp[!grepl("X",Chr), LogRatio := log2(logRbasedCN(LogRatio, purity, ploidyT, cn=2))]#log2(logRbasedCN(LogRatio, purity, ploidyT, cn=2))]
-	ulp[grepl("X",Chr), LogRatio := log2(logRbasedCN(LogRatio, purity, ploidyT, cn=1))]#log2(logRbasedCN(LogRatio, purity, ploidyT, cn=1))]
+	ulp[!grepl("X",Chr), LogRatio := log2(logRbasedCN(LogRatio, purity, ploidyT, cn=2))]
+	ulp[grepl("X",Chr), LogRatio := log2(logRbasedCN(LogRatio, purity, ploidyT, cn=1))]
 	colName <- "logR_Copy_Number"
 }else{
-	ulp[, LogRatio := LogRatio + log2(ploidyS / 2)]#log2(ploidyS / 2)]
+	ulp[, LogRatio := LogRatio + log2(ploidyS / 2)]
 	segs$LogRatio <- segs$Median_logR
-	segs$LogRatio <- segs$LogRatio +log2(ploidyS / 2)#log2(ploidyS / 2)
+	segs$LogRatio <- segs$LogRatio +log2(ploidyS / 2)
 	colName <- "LogRatio"
 }
 # exclude data points not analyzed by titan
