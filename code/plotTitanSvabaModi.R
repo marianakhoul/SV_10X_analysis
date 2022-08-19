@@ -216,7 +216,7 @@ sv[grepl("Inversion", CN_overlap_type), SV.class := "Inversion"]
 sv[grepl("Trans", CN_overlap_type), SV.class := "Translocation"]
 sv[is.na(CN_overlap_type), SV.class := "Unbalanced"]
 sv[, color := svCol[SV.class]]
-#save.image(file=outImage)
+save.image(file=outImage)
 
 #####################################
 ########## PLOT CHR RESULTS #########
@@ -256,14 +256,14 @@ for (j in 1:length(chrStr)){
     spacing <- 6
   }	
   if (plotSegs) { segsToPlot <- segs } else { segsToPlot <- NULL}
-  
+  save.image(file=outImage)  
   if (grepl("X", chrStr[j])) { cnCol <- rep("#000000", 30) }
   message("Plotting read depth CN")
   plotTitanIchorCNA(ulp, segs=segsToPlot, chr=chrStr[j], colName=colName, 
       cytoBand=FALSE, geneAnnot=genes, purity = purity, ploidyT = NULL, yaxis=yaxis, cnCol = cnCol,
       yrange=ylim, xlim=xlim, spacing=spacing, xaxt=xaxt, cex = cex, gene.cex = 1,
       plot.title = plotTitle)
-
+  save.image(file=outImage)
   if (nrow(sv) > 0){
       centreLine <- 0
     
