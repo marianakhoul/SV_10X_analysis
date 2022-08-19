@@ -687,10 +687,10 @@ plotIdiogram.hg38 <- function (chromosome, cytoband, seqinfo, cytoband.ycoords, 
   }
   rownames(cytoband) <- as.character(cytoband[, "name"])
   sl <- seqlengths(seqinfo)[chromosome]
-  if (missing(xlim))
-    xlim <- c(0, sl)
-  if (unit == "Mb")
-    xlim <- xlim/1e+06
+  if (missing(xlim)){
+    xlim <- c(0, sl)}
+  if (unit == "Mb"){
+    xlim <- xlim/1e+06}
   cytoband_p <- cytoband[grep("^p", rownames(cytoband), value = TRUE),
                          ]
   cytoband_q <- cytoband[grep("^q", rownames(cytoband), value = TRUE),
