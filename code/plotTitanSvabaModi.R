@@ -356,7 +356,7 @@ for (j in 1:length(chrStr)){
     
     if (genomeBuild == "hg38" && file.exists(cytobandFile)){
       sl <- seqlengths(seqinfo[chrStr[j]])
-      pI <- plotIdiogram.hg38(chrStr[j], cytoband=cytoband, seqinfo=seqinfo, unit="bp", label.y=ylim[1]-(ylim[2]-ylim[1])*0.275, new=FALSE, ylim=c(ylim[1]-(ylim[2]-ylim[1])*0.15,ylim[1]-(ylim[2]-ylim[1])*0.075))#replaced old with for the !zoom pI
+      pI <- plotIdiogram.hg38(chrStr[j], cytoband=cytoband, seqinfo=seqinfo, unit="bp", label.y=ylim[1]-(ylim[2]-ylim[1])*0.275, new=FALSE, ylim=c(ylim[1]-(ylim[2]-ylim[1])*0.15,ylim[1]-(ylim[2]-ylim[1])*0.075))
     }else{
       pI <- plotIdiogram(chrStr[j], build="hg19", unit="bp", label.y=-0.6, new=FALSE, ylim=c(-0.3,-0.15))
     }
