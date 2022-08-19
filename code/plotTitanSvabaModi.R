@@ -177,13 +177,13 @@ ploidyT <- as.numeric(params[2, 2])
 normCN <- 2
 ploidyS <- purity * ploidyT + (1-purity) * normCN
 if (yaxis == "integer"){
-	ulp[!grepl("X",Chr), LogRatio := logRbasedCN(LogRatio, purity, ploidyT, cn=2)]#log2(logRbasedCN(LogRatio, purity, ploidyT, cn=2))]
-	ulp[grepl("X",Chr), LogRatio := logRbasedCN(LogRatio, purity, ploidyT, cn=1)]#log2(logRbasedCN(LogRatio, purity, ploidyT, cn=1))]
+	ulp[!grepl("X",Chr), LogRatio := log2(logRbasedCN(LogRatio, purity, ploidyT, cn=2))]#log2(logRbasedCN(LogRatio, purity, ploidyT, cn=2))]
+	ulp[grepl("X",Chr), LogRatio := log2(logRbasedCN(LogRatio, purity, ploidyT, cn=1))]#log2(logRbasedCN(LogRatio, purity, ploidyT, cn=1))]
 	colName <- "logR_Copy_Number"
 }else{
-	ulp[, LogRatio := LogRatio + ploidyS / 2]#log2(ploidyS / 2)]
+	ulp[, LogRatio := LogRatio + log2(ploidyS / 2)]#log2(ploidyS / 2)]
 	segs$LogRatio <- segs$Median_logR
-	segs$LogRatio <- segs$LogRatio + ploidyS / 2#log2(ploidyS / 2)
+	segs$LogRatio <- segs$LogRatio +log2(ploidyS / 2)#log2(ploidyS / 2)
 	colName <- "LogRatio"
 }
 # exclude data points not analyzed by titan
@@ -356,7 +356,7 @@ for (j in 1:length(chrStr)){
     
     if (genomeBuild == "hg38" && file.exists(cytobandFile)){
       sl <- seqlengths(seqinfo[chrStr[j]])
-      pI <- plotIdiogram.hg38(chrStr[j], cytoband=cytoband, seqinfo=seqinfo, unit="Mb", label.y=-0.425, new=FALSE, ylim=c(-0.3,-0.15))	#xlim=c(0, max(sl)),
+      pI <- plotIdiogram.hg38(chrStr[j], cytoband=cytoband, seqinfo=seqinfo, unit="bp", label.y=-0.425, new=FALSE, ylim=c(-0.3,-0.15))	#xlim=c(0, max(sl)),
     }else{
       pI <- plotIdiogram(chrStr[j], build="hg19", unit="bp", label.y=-0.6, new=FALSE, ylim=c(-0.3,-0.15))
     }
