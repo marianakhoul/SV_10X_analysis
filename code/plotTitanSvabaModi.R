@@ -113,7 +113,7 @@ if (zoom){
   startTitle <- paste0(format(round(startPos/1e6,2), nsmall=2))
   endTitle <- paste0(format(round(endPos/1e6,2),nsmall=2), "Mb")
   cex <- 0.75
-  cytoBand <- T
+  cytoBand <- F
   xaxt <- "s"
   plotAtCentre <- FALSE
   cnColor <- FALSE
@@ -260,7 +260,7 @@ for (j in 1:length(chrStr)){
   if (grepl("X", chrStr[j])) { cnCol <- rep("#000000", 30) }
   message("Plotting read depth CN")
   plotTitanIchorCNA(ulp, segs=segsToPlot, chr=chrStr[j], colName=colName, 
-      cytoBand=TRUE, geneAnnot=genes, purity = purity, ploidyT = NULL, yaxis=yaxis, cnCol = cnCol,
+      cytoBand=FALSE, geneAnnot=genes, purity = purity, ploidyT = NULL, yaxis=yaxis, cnCol = cnCol,
       yrange=ylim, xlim=xlim, spacing=spacing, xaxt=xaxt, cex = cex, gene.cex = 1,
       plot.title = plotTitle)
 
