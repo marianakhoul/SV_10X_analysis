@@ -112,15 +112,15 @@ if (!require(bsg, character.only=TRUE, quietly=TRUE, warn.conflicts=FALSE)) {
 
 
 if (zoom){
-  xlim <- c(startPos, endPos)
+  xlim <- NULL#c(startPos, endPos)
   startTitle <- paste0(format(round(startPos/1e6,2), nsmall=2))
   endTitle <- paste0(format(round(endPos/1e6,2),nsmall=2), "Mb")
-  cex <- 0.75
-  cytoBand <- F
-  xaxt <- "s"
+  cex <- 0.25
+  cytoBand <- T
+  xaxt <- "n"
   plotAtCentre <- FALSE
   cnColor <- FALSE
-  plotIdio <- FALSE
+  plotIdio <- TRUE
   exclude.na.snp <- FALSE
 }else{
   xlim <- NULL
