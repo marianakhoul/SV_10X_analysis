@@ -114,10 +114,10 @@ if (zoom){
   endTitle <- paste0(format(round(endPos/1e6,2),nsmall=2), "Mb")
   cex <- 0.75
   cytoBand <- F
-  xaxt <- "s"
+  xaxt <- "n"
   plotAtCentre <- FALSE
   cnColor <- FALSE
-  plotIdio <- FALSE
+  plotIdio <- TRUE
   exclude.na.snp <- FALSE
 }else{
   xlim <- NULL
