@@ -325,17 +325,17 @@ plotHaplotypeFraction <- function(dataIn, chr = NULL, type = "HaplotypeRatio", g
             if (missing(xlim)) {
                 xlim <- as.numeric(c(1, dataByChr[nrow(dataByChr), Position]))
             }
-            #if (type == "HaplotypeRatio"){
-            #  plot(dataByChr[, Position], dataByChr[, HaplotypeRatio.1], 
-            #      col = colors.1, 
-            #      pch = 16, xaxt = "n", las = 1, ylab = "Haplotype \n Fraction", xlim = xlim, 
-            #      ...)
-            #  points(dataByChr[, Position], dataByChr[, HaplotypeRatio.2], col = colors.2, pch=16, ...)
-            #}else if (type == "AllelicRatio"){
-            #   plot(dataByChr[, Position], dataByChr[, AllelicRatio], 
-            #      col = colors.1, 
-            #      pch = 16, xaxt = "n", las = 1, ylab = "Allelic Fraction", xlim = xlim, 
-            #     ...)
+            if (type == "HaplotypeRatio"){
+              plot(dataByChr[, Position], dataByChr[, HaplotypeRatio.1], 
+                  col = colors.1, 
+                  pch = 16, xaxt = "n", las = 1, ylab = "Haplotype \n Fraction", xlim = xlim, 
+                  ...)
+              points(dataByChr[, Position], dataByChr[, HaplotypeRatio.2], col = colors.2, pch=16, ...)
+            }else if (type == "AllelicRatio"){
+               plot(dataByChr[, Position], dataByChr[, AllelicRatio], 
+                  col = colors.1, 
+                  pch = 16, xaxt = "n", las = 1, ylab = "Allelic Fraction", xlim = xlim, 
+                 ...)
             }else{
               stop("Need to specify \"type\": HaplotypeRatio or AllelicRatio")
             }
@@ -357,15 +357,15 @@ plotHaplotypeFraction <- function(dataIn, chr = NULL, type = "HaplotypeRatio", g
         
         # plot for all chromosomes
         coord <- getGenomeWidePositions(dataIn[, Chr], dataIn[, Position])
-        #if (type == "HaplotypeRatio"){
-        #  plot(coord$posns, as.numeric(dataIn[, HaplotypeRatio.1]), 
-        #    col = colors.1, pch = 16, 
-        #    xaxt = "n", bty = "n", las = 1, ylab = "Haplotype \n Fraction", ...)
-        #  points(coord$posns, dataIn[, HaplotypeRatio.2], col = colors.1, pch=16, ...)
-        #}else if (type == "AllelicRatio"){
-        #  plot(coord$posns, as.numeric(dataIn[, AllelicRatio]), 
-        #    col = colors.2, pch = 16, 
-        #    xaxt = "n", bty = "n", las = 1, ylab = "Allelic Fraction", ...)
+        if (type == "HaplotypeRatio"){
+          plot(coord$posns, as.numeric(dataIn[, HaplotypeRatio.1]), 
+            col = colors.1, pch = 16, 
+            xaxt = "n", bty = "n", las = 1, ylab = "Haplotype \n Fraction", ...)
+          points(coord$posns, dataIn[, HaplotypeRatio.2], col = colors.1, pch=16, ...)
+        }else if (type == "AllelicRatio"){
+          plot(coord$posns, as.numeric(dataIn[, AllelicRatio]), 
+            col = colors.2, pch = 16, 
+            xaxt = "n", bty = "n", las = 1, ylab = "Allelic Fraction", ...)
         }else{
               stop("Need to specify \"type\": HaplotypeRatio or AllelicRatio")
         }
