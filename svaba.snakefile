@@ -8,9 +8,9 @@ def getLRFullPath(base, filename):
 
 rule svabaAll:
   input: 
-  	#expand("results/svaba/{tumor}", tumor=config["pairings"]),
-  	#expand("results/svaba/{tumor}/{tumor}.svaba.somatic.sv.vcf", tumor=config["pairings"]),
-  	#expand("results/svaba/{tumor}/{tumor}.svaba.unfiltered.somatic.sv.vcf", tumor=config["pairings"]),
+  	expand("results/svaba/{tumor}", tumor=config["pairings"]),
+  	expand("results/svaba/{tumor}/{tumor}.svaba.somatic.sv.vcf", tumor=config["pairings"]),
+  	expand("results/svaba/{tumor}/{tumor}.svaba.unfiltered.somatic.sv.vcf", tumor=config["pairings"]),
   	expand("results/barcodeRescue/{tumor}.bxOverlap.vcf", tumor=config["pairings"])
 
 rule runSvaba:
@@ -35,7 +35,8 @@ rule runSvaba:
 
 rule barcodeRescue:
 	input:
-		tumBam=lambda wildcards: getLRFullPath(config["samples"][wildcards.tumor], config["bamFileName"]),
+		tumBam=config["samples"][wildcards.tumor]
+		#lambda wildcards: getLRFullPath(config["samples"][wildcards.tumor], config["bamFileName"]),
 		unfiltVCF="results/svaba/{tumor}/{tumor}.svaba.unfiltered.somatic.sv.vcf",
 		bps="results/svaba/{tumor}/{tumor}.bps.txt.gz"
 	output:
