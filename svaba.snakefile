@@ -35,7 +35,7 @@ rule runSvaba:
 
 rule barcodeRescue:
 	input:
-		tumBam=config["samples"][wildcards.tumor],
+		tumBam=lambda wildcards: config["samples"][wildcards.tumor],
 		#lambda wildcards: getLRFullPath(config["samples"][wildcards.tumor], config["bamFileName"]),
 		unfiltVCF="results/svaba/{tumor}/{tumor}.svaba.unfiltered.somatic.sv.vcf",
 		bps="results/svaba/{tumor}/{tumor}.bps.txt.gz"
