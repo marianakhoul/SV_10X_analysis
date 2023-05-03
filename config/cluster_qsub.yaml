@@ -1,6 +1,6 @@
 __default__:
     q:  broad
-    h_vmem: 4G
+    h_vmem: 10G
     h_rt:   5:0:0
     pe: smp 4
     binding:    linear:1
