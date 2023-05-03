@@ -75,7 +75,7 @@ rule buildPoN:
 		genomeStyle=config["genomeStyle"],
 		chrs=config["chrs"]
 	log:
-		"logs/panelOfNormalsSV/panelOfNormalsSV.log"
+		"logs/panelOfNormalsSV/{tumor}/panelOfNormalsSV.log"
 	shell:
 		"Rscript {params.buildPoNscript} --SVABAdir {input.svabaDir} --LRdir {input.lrDir} --svaba_funcs {params.svabafuncs} --genomeBuild {params.genomeBuild} --genomeStyle {params.genomeStyle} --chrs \"{params.chrs}\" --outputPoNFile {output.outputPoNFile} --outputBlackListFile {output.outputBlackListFile} > {log} 2> {log}"
 
