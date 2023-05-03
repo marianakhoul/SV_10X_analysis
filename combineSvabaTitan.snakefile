@@ -28,8 +28,8 @@ rule all:
   input: 
   	expand("results/LongRangerSomaticSV/{tumor}/{tumor}.LR.somatic.sv.txt", tumor=config["pairings"]),
   	expand("results/LongRangerSomaticSV/{tumor}/{tumor}.LR.germline.sv.txt", tumor=config["pairings"]),
-  	"results/panelOfNormalsSV/PanelOfNormalsSV.txt",
-	"results/panelOfNormalsSV/PoNBlacklistBins.txt",
+  	expand("results/panelOfNormalsSV/{tumor}/PanelOfNormalsSV.txt",tumor=config["pairings"]),
+	expand("results/panelOfNormalsSV/{tumor}/PoNBlacklistBins.txt",tumor=config["pairings"]),
 	expand("results/barcodeRescue/{tumor}.bxOverlap.vcf", tumor=config["pairings"]),
   	expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.txt", tumor=config["pairings"]),
   	expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.cn.txt", tumor=config["pairings"]),
@@ -65,8 +65,8 @@ rule buildPoN:
 		svabaDir=expand("./results/svaba/{tumor}", tumor=config["pairings"]),
 		lrDir=expand("./results/LongRangerSomaticSV/{tumor}", tumor=config["pairings"])
 	output:
-		outputPoNFile="results/panelOfNormalsSV/PanelOfNormalsSV.txt",
-		outputBlackListFile="results/panelOfNormalsSV/PoNBlacklistBins.txt"
+		outputPoNFile="results/panelOfNormalsSV/{tumor}/PanelOfNormalsSV.txt",
+		outputBlackListFile="results/panelOfNormalsSV/{tumor}/PoNBlacklistBins.txt"
 	params:
 		buildPoNscript=config["buildPoN_script"],
 		blackListBinWidth=config["PoN_blackListBinWidth"],
@@ -135,8 +135,8 @@ rule combineSvabaTitan:
 rule annotatePoNSV:
 	input:
 		svFile="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.txt",
-		PoNFile="results/panelOfNormalsSV/PanelOfNormalsSV.txt",
-		blackListFile="results/panelOfNormalsSV/PoNBlacklistBins.txt"
+		PoNFile="results/panelOfNormalsSV/{tumor}/PanelOfNormalsSV.txt",
+		blackListFile="results/panelOfNormalsSV/{tumor}/PoNBlacklistBins.txt"
 	output:
 		outputSVAnnotFile="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.annotPoN.bedpe",
 	params:
