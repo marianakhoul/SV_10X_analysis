@@ -34,7 +34,7 @@ rule all:
   	#expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.txt", tumor=config["pairings"]),
   	#expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.cn.txt", tumor=config["pairings"]),
   	#expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.bedpe", tumor=config["pairings"]),
- 	#expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.annotPoN.bedpe", tumor=config["pairings"]),
+ 	expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.annotPoN.bedpe", tumor=config["pairings"]),
 	#expand("results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.PoNToolFilter.bedpe", tumor=config["pairings"]),
   	#expand("results/plotSvabaTitan/{tumor}/{tumor}_CNA-SV-BX_titan_chr{chr}.{format}", tumor=config["pairings"], chr=CHRS, format=config["plot_format"]),
    	#expand("results/plotCircos/{tumor}/{tumor}_Circos.pdf", tumor=config["pairings"])
@@ -79,3 +79,17 @@ rule buildPoN:
 	shell:
 		"Rscript {params.buildPoNscript} --SVABAdir {input.svabaDir} --LRdir {input.lrDir} --svaba_funcs {params.svabafuncs} --genomeBuild {params.genomeBuild} --genomeStyle {params.genomeStyle} --chrs \"{params.chrs}\" --outputPoNFile {output.outputPoNFile} --outputBlackListFile {output.outputBlackListFile} > {log} 2> {log}"
 
+rule annotatePoNSV:
+	input:
+		svFile="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.txt",
+		PoNFile="results/panelOfNormalsSV/{tumor}/PanelOfNormalsSV.txt",
+		blackListFile="results/panelOfNormalsSV/{tumor}/PoNBlacklistBins.txt"
+	output:
+		outputSVAnnotFile="results/combineSvabaTitan/{tumor}/{tumor}.svabaTitan.sv.annotPoN.bedpe",
+	params:
+		annotScript=config["annotPoNSV_script"],
+		svabafuncs=config["svaba_funcs"],
+	log:
+		"logs/combineSvabaTitan/{tumor}.annotPoNSV.log"
+	shell:
+		"Rscript {params.annotScript} --id {wildcards.tumor} --svaba_funcs {params.svabafuncs} --svFile {input.svFile} --PoNFile {input.PoNFile} --blackListFile {input.blackListFile} --outputSVAnnotFile {output.outputSVAnnotFile} 2> {log} > {log}"
