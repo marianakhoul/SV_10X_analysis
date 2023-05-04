@@ -87,8 +87,8 @@ rule barcodeRescue:
 	
 rule buildPoN:
 	input:
-		svabaDir="./results/svaba/{tumor}/",
-		lrDir="./results/LongRangerSomaticSV/{tumor}/"
+		svabaDir="results/svaba/{tumor}/",
+		lrDir="results/LongRangerSomaticSV/{tumor}/"
 	output:
 		outputPoNFile="results/panelOfNormalsSV/{tumor}/PanelOfNormalsSV.txt",
 		outputBlackListFile="results/panelOfNormalsSV/{tumor}/PoNBlacklistBins.txt"
