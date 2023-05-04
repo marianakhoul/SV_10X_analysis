@@ -87,8 +87,8 @@ rule barcodeRescue:
 	
 rule buildPoN:
 	input:
-		svabaDir="results/svaba/{tumor}/",
-		lrDir="results/LongRangerSomaticSV/{tumor}/"
+		svabaDir="results/svaba/{tumor}/"
+		
 	output:
 		outputPoNFile="results/panelOfNormalsSV/{tumor}/PanelOfNormalsSV.txt",
 		outputBlackListFile="results/panelOfNormalsSV/{tumor}/PoNBlacklistBins.txt"
@@ -98,11 +98,12 @@ rule buildPoN:
 		svabafuncs=config["svaba_funcs"],
 		genomeBuild=config["genomeBuild"],
 		genomeStyle=config["genomeStyle"],
-		chrs=config["chrs"]
+		chrs=config["chrs"],
+		lrDir="results/LongRangerSomaticSV/{tumor}/"
 	log:
 		"logs/panelOfNormalsSV/{tumor}/panelOfNormalsSV.log"
 	shell:
-		"Rscript {params.buildPoNscript} --SVABAdir {input.svabaDir} --LRdir {input.lrDir} --svaba_funcs {params.svabafuncs} --genomeBuild {params.genomeBuild} --genomeStyle {params.genomeStyle} --chrs \"{params.chrs}\" --outputPoNFile {output.outputPoNFile} --outputBlackListFile {output.outputBlackListFile} > {log} 2> {log}"
+		"Rscript {params.buildPoNscript} --SVABAdir {input.svabaDir} --LRdir {params.lrDir} --svaba_funcs {params.svabafuncs} --genomeBuild {params.genomeBuild} --genomeStyle {params.genomeStyle} --chrs \"{params.chrs}\" --outputPoNFile {output.outputPoNFile} --outputBlackListFile {output.outputBlackListFile} > {log} 2> {log}"
 		
 
 rule combineSvabaTitan:
