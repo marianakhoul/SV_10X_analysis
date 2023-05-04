@@ -12,6 +12,6 @@ runSvaba:
     binding:    linear:4
     
 barcodeRescue:
-    h_vmem: 13G
+    h_vmem: 20G
     h_rt:   300:0:0
-    pe: smp 2
+    pe: smp 4
