@@ -22,8 +22,8 @@ plotCircos_script: code/create_circosPlot.R
 
 ## path to TITAN snakemake root  ##
 titan_libdir:  /home/mi724/Tools/TitanCNA/
-titan_results:  /home/mi724/Tools/TitanCNA_10X_snakemake/results/
-#/home/mi724/Tools/TitanCNA_10X_snakemake/results/DTRCC5_LPAnode/
+titan_results:  /home/mi724/Tools/TitanCNA_10X_snakemake/results/DTRCC5_LPAnode/
+#/home/mi724/Tools/TitanCNA_10X_snakemake/results/
 
 
 ## reference files ##
@@ -31,7 +31,7 @@ refGenome:  /mnt/storage/labs/sviswanathan/GATK_ref/cz_ref/longranger/refdata-GR
 genomeBuild:  hg38
 genomeStyle:  UCSC
 cytobandFile:  data/cytoBand_hg38.txt # only need if hg38
-chrs:  c(1:22, \"X\")
+chrs:  c(1:22, \"X\", \"Y\")
 
 ## LongRanger params ##
 bamFileName:  phased_possorted_bam.bam
