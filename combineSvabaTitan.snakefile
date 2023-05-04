@@ -19,9 +19,8 @@ def getLRFullPath(base, filename):
 def getTITANpath(base, id, ext):
   return glob.glob(''.join([base, "optimalClusterSolution/", id, "_cluster*", ext]))
 
-
-CHRS = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,'X']
-
+#for males
+CHRS = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,'X','Y']
 
 
 rule all:
@@ -45,7 +44,7 @@ rule getLongRangerSomaticSV:
 		normSVFile=lambda wildcards: getLRFullPath(config["samples"][config["pairings"][wildcards.tumor]], "large_sv_calls.bedpe"),
 		tumDelFile=lambda wildcards: getLRFullPath(config["samples"][wildcards.tumor], "dels.vcf.gz"),
 		normDelFile=lambda wildcards: getLRFullPath(config["samples"][config["pairings"][wildcards.tumor]], "dels.vcf.gz")
-			
+
 	output:
 		outputSVFile="results/LongRangerSomaticSV/{tumor}/{tumor}.LR.somatic.sv.txt",
 		outputNormSVFile="results/LongRangerSomaticSV/{tumor}/{tumor}.LR.germline.sv.txt",
@@ -59,26 +58,7 @@ rule getLongRangerSomaticSV:
 		"logs/LongRangerSomaticSV/{tumor}.log"
 	shell:
 		"Rscript {params.getLRscript} --id {wildcards.tumor} --tenX_funcs {params.tenXfuncs} --tumLargeSVFile {input.tumSVFile} --normLargeSVFile {input.normSVFile} --tumDeletionFile {input.tumDelFile} --normDeletionFile {input.normDelFile} --genomeBuild {params.genomeBuild} --genomeStyle {params.genomeStyle} --chrs \"{params.chrs}\" --outDir results/LongRangerSomaticSV/{wildcards.tumor}/ --outputSVFile {output.outputSVFile} --outputNormSVFile {output.outputNormSVFile} > {log} 2> {log}"
-		
-rule buildPoN:
-	input:
-		svabaDir="./results/svaba/{tumor}/",
-		lrDir="./results/LongRangerSomaticSV/{tumor}/"
-	output:
-		outputPoNFile="results/panelOfNormalsSV/{tumor}/PanelOfNormalsSV.txt",
-		outputBlackListFile="results/panelOfNormalsSV/{tumor}/PoNBlacklistBins.txt"
-	params:
-		buildPoNscript=config["buildPoN_script"],
-		blackListBinWidth=config["PoN_blackListBinWidth"],
-		svabafuncs=config["svaba_funcs"],
-		genomeBuild=config["genomeBuild"],
-		genomeStyle=config["genomeStyle"],
-		chrs=config["chrs"]
-	log:
-		"logs/panelOfNormalsSV/{tumor}/panelOfNormalsSV.log"
-	shell:
-		"Rscript {params.buildPoNscript} --SVABAdir {input.svabaDir} --LRdir {input.lrDir} --svaba_funcs {params.svabafuncs} --genomeBuild {params.genomeBuild} --genomeStyle {params.genomeStyle} --chrs \"{params.chrs}\" --outputPoNFile {output.outputPoNFile} --outputBlackListFile {output.outputBlackListFile} > {log} 2> {log}"
-		
+
 
 rule barcodeRescue:
 	input:
@@ -103,6 +83,27 @@ rule barcodeRescue:
 		"logs/barcodeRescue/{tumor}.bxOverlap.log"
 	shell:
 		"Rscript {params.bxRescueScript} --tenX_funcs {params.tenXfuncs} --svaba_funcs {params.svabafuncs} --id {params.id} --tumBam {input.tumBam} --vcf {input.unfiltVCF} --bps {input.bps} --chrs \"{params.chrs}\" --genomeStyle {params.genomeStyle} --genomeBuild {params.genomeBuild} --minMapQ {params.minMapQ} --minLength {params.minLength} --windowSize {params.windowSize} --minReadOverlapSupport {params.minRead} --outFile {output} > {log} 2> {log}"
+		
+	
+rule buildPoN:
+	input:
+		svabaDir="results/svaba/{tumor}/"
+		
+	output:
+		outputPoNFile="results/panelOfNormalsSV/{tumor}/PanelOfNormalsSV.txt",
+		outputBlackListFile="results/panelOfNormalsSV/{tumor}/PoNBlacklistBins.txt"
+	params:
+		buildPoNscript=config["buildPoN_script"],
+		blackListBinWidth=config["PoN_blackListBinWidth"],
+		svabafuncs=config["svaba_funcs"],
+		genomeBuild=config["genomeBuild"],
+		genomeStyle=config["genomeStyle"],
+		chrs=config["chrs"],
+		lrDir="results/LongRangerSomaticSV/{tumor}/"
+	log:
+		"logs/panelOfNormalsSV/{tumor}/panelOfNormalsSV.log"
+	shell:
+		"Rscript {params.buildPoNscript} --SVABAdir {input.svabaDir} --LRdir {params.lrDir} --svaba_funcs {params.svabafuncs} --genomeBuild {params.genomeBuild} --genomeStyle {params.genomeStyle} --chrs \"{params.chrs}\" --outputPoNFile {output.outputPoNFile} --outputBlackListFile {output.outputBlackListFile} > {log} 2> {log}"
 		
 
 rule combineSvabaTitan:
