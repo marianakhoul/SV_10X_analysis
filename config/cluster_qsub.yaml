@@ -1,6 +1,6 @@
 __default__:
     q:  broad
-    h_vmem: 10G
+    h_vmem: 20G
     h_rt:   5:0:0
     pe: smp 2
     binding:    linear:1
@@ -12,6 +12,16 @@ runSvaba:
     binding:    linear:4
     
 barcodeRescue:
-    h_vmem: 13G
+    h_vmem: 20G
     h_rt:   300:0:0
     pe: smp 4
+
+combineSvabaTitan:
+    h_vmem: 40G
+    h_rt:   300:0:0
+    pe: smp 4
+
+plotSvabaTitan:
+    h_vmem: 10G
+    h_rt:   300:0:0
+    pe: smp 1
