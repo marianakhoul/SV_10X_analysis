@@ -21,7 +21,7 @@ combineSvabaTitan:
     h_rt:   300:0:0
     pe: smp 4
 
-plotSvabaTitan
+plotSvabaTitan:
     h_vmem: 10G
     h_rt:   300:0:0
     pe: smp 1
