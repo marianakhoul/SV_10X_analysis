@@ -20,3 +20,8 @@ combineSvabaTitan:
     h_vmem: 40G
     h_rt:   300:0:0
     pe: smp 4
+
+plotSvabaTitan
+    h_vmem: 10G
+    h_rt:   300:0:0
+    pe: smp 1
