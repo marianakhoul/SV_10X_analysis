@@ -15,3 +15,8 @@ barcodeRescue:
     h_vmem: 20G
     h_rt:   300:0:0
     pe: smp 4
+
+combineSvabaTitan:
+    h_vmem: 40G
+    h_rt:   300:0:0
+    pe: smp 4
